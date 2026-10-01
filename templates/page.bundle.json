@@ -1,0 +1,15 @@
+{
+    "sections": {
+      "main": {
+        "type": "bundle-pack",
+        "settings": {
+          "heading": "UNLOCK 30% OFF",
+          "subheading": "",
+          "products_limit": 24,
+          "discount_code": ""
+        }
+      }
+    },
+    "order": ["main"]
+  }
+  
