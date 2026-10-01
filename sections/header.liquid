@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <ul class="header__utils-items list-unstyled">
             @@additional_links_placeholder@@
 
-            <li class="header__utils-item small-hide medium-hide">
+            <li class="header__utils-item header__utils-item--search">
               {%- render 'search-drawer', append_id: 'header' -%}
             </li>
 
@@ -482,6 +482,12 @@ document.addEventListener('DOMContentLoaded', function () {
 {% style %}
   .header__logo {
     width: {{ section.settings.logo_width_mobile | divided_by: 10.0 }}rem;
+  }
+  @media screen and (max-width: 749px) {
+    .header__logo {
+      width: 100px;
+      max-width: 100px;
+    }
   }
   .header__logo.header__logo-text .h4 {
     font-size: calc(var(--font-heading-scale) * 1.6rem * {{ section.settings.logo_font_size }});

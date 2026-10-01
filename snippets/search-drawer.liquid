@@ -6,7 +6,7 @@
   - append_id {String}
 {%- endcomment -%}
 
-<desktop-drawer class="drawer">
+<desktop-drawer class="drawer drawer--header-search">
   <details id="Search-drawer-{{- append_id -}}" class="drawer__container">
     <summary
       class="drawer__button svg-color-inherit{{ button_class }}"
@@ -23,16 +23,16 @@
 
     <div class="drawer__content js-drawer" id="Search-menu-drawer-{{- append_id -}}" tabindex="-1">
       <button
-        class="drawer__button-close button-reset svg-color-inherit small-hide medium-hide no-js-hidden js-btn-close-drawer"
+        class="drawer__button-close button-reset svg-color-inherit no-js-hidden js-btn-close-drawer"
         aria-label="{{- 'actions.close' | t -}}"
         aria-controls="Search-menu-drawer-{{- append_id -}}"
         aria-expanded="false"
       >
-        {% render 'icon', icon_name: 'theme-arrow-close' %}
+        {% render 'icon', icon_name: 'theme-close' %}
       </button>
 
       <div class="drawer__row">
-        {%- render 'search', input_id: 'desktop', input_class: ' js-drawer-focus-element' -%}
+        {%- render 'search', input_id: 'desktop', input_class: ' js-drawer-focus-element', placeholder: 'Search our store' -%}
       </div>
     </div>
   </details>

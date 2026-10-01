@@ -97,7 +97,7 @@
           "logo": "shopify://shop_images/EMILOS_LOGO.svg",
           "logo_svg_code": "",
           "logo_width": 148,
-          "logo_width_mobile": 146,
+          "logo_width_mobile": 100,
           "logo_font_size": 1.5,
           "menu": "main-menu",
           "menu_mobile": "main-menu",

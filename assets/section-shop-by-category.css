@@ -149,6 +149,17 @@
   .shop-by-category__nav {
     display: none;
   }
+
+  @media screen and (max-width: 749px) {
+    .shop-by-category__header {
+      margin-bottom: 40px;
+    }
+
+    .shop-by-category__footer {
+      margin-top: 50px;
+      padding-block-end: 0;
+    }
+  }
   
   @media screen and (min-width: 750px) {
     .shop-by-category {
