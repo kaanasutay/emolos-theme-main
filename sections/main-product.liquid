@@ -152,10 +152,15 @@
     %}
 
     <div class="container max-w-{% if product.media.size > 0 %}{{- section.settings.section_width -}}{% else %}narrow{% endif %}">
+      {%- if settings.enable_breadcrumbs_on_product_page and product.gift_card? == false and product.media.size > 0 -%}
+        {%- liquid
+          assign gallery_breadcrumbs_class = 'product__gallery-breadcrumbs product__breadcrumbs ' | append: section.settings.breadcrumbs_color_scheme_text
+          render 'breadcrumbs', alignment: 'start', class: gallery_breadcrumbs_class
+        -%}
+      {%- endif -%}
       <div class="grid product__grid {% if product.media.size > 0 %} product__grid--has-media {% endif %}">
         {%- if product.media.size > 0 -%}
           <div class="grid__item product__grid__item product__grid__item--media">
-
             <product-media class="product__media {{ section.settings.product_media_layout }} {% if section.settings.adaptive_ratio_and_auto_height == "default" %} product__media--fit{% endif %}" data-auto-height="{{ slider_auto_height }}" data-with-thumbs="{{- with_thumbs -}}" data-layout="{{- section.settings.product_media_layout -}}">
 
               {%-
@@ -195,7 +200,7 @@
                 assign swiper_options = '{'
                 assign swiper_options = swiper_options | append: '"slidesPerViewDesktop": ' | append: '1'
                 if section.settings.slides_with_thumbs != 'none'
-                  assign swiper_options = swiper_options | append: ', "thumbsDirectionDesktop": "' | append: 'vertical' | append: '"'
+                  assign swiper_options = swiper_options | append: ', "thumbsDirectionDesktop": "' | append: 'horizontal' | append: '"'
                 endif
                 assign swiper_options = swiper_options | append: '}'
               %}
@@ -216,6 +221,44 @@
                   </div>
 
                   <div class="swiper-pagination"></div>
+
+                  {%- liquid
+                    assign gallery_variant = product.selected_or_first_available_variant
+                    assign gallery_sale_percent = 0
+                    if gallery_variant.compare_at_price > gallery_variant.price and gallery_variant.compare_at_price > 0
+                      assign gallery_sale_percent = gallery_variant.compare_at_price | minus: gallery_variant.price | times: 100.0 | divided_by: gallery_variant.compare_at_price | round
+                    endif
+
+                    assign model_info = section.settings.model_info
+                    if product.metafields.custom.model_info.value != blank
+                      assign model_info = product.metafields.custom.model_info.value
+                    elsif product.metafields.theme.model_info.value != blank
+                      assign model_info = product.metafields.theme.model_info.value
+                    endif
+                  -%}
+
+                  {%- if gallery_sale_percent > 0 -%}
+                    <span class="product__media-sale-badge">{{- 'products.product.badges.percent_off' | t: percent: gallery_sale_percent -}}</span>
+                  {%- endif -%}
+
+                  {%- if model_info != blank -%}
+                    <p class="product__model-info">{{- model_info | escape -}}</p>
+                  {%- endif -%}
+
+                  {%- if product.media.size > 1 -%}
+                    <div class="swiper-buttons product__media-arrows no-js-hidden">
+                      <button type="button" class="swiper-button swiper-button--prev" name="prev" aria-label="{{- 'actions.previous' | t -}}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                          <path d="m15 18-6-6 6-6"></path>
+                        </svg>
+                      </button>
+                      <button type="button" class="swiper-button swiper-button--next" name="next" aria-label="{{- 'actions.next' | t -}}">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                          <path d="m9 18 6-6-6-6"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  {%- endif -%}
                 </div>
 
                 {% if section.settings.slides_with_thumbs != 'none' %}
@@ -234,18 +277,6 @@
 
                   </div>
                 {% endif %}
-
-                {% if section.settings.slides_with_thumbs != 'desktop_and_mobile' %}
-                  <div class="swiper-buttons small-hide medium-hide {{ section.settings.arrows_color }} {% if product.media.size == 1 %} hidden {% endif %} no-js-hidden">
-                    <button class="swiper-button swiper-button--prev">
-                      {% render 'icon', icon_name: 'theme-arrow' %}
-                    </button>
-
-                    <button class="swiper-button swiper-button--next">
-                      {% render 'icon', icon_name: 'theme-arrow' %}
-                    </button>
-                  </div>
-                {% endif %}
               </div>
 
               <div class="hidden" data-close-icon>{% render 'icon', icon_name: 'theme-close' %}</div>
@@ -254,28 +285,6 @@
             </product-media>
           </div>
         {%- endif -%}
-
-        <div class="product__bar{% if product.gift_card? %} small-hide{% endif %} product__bar--fixed-desktop">
-          <div class="container max-w-full">
-            <div class="product__bar-inner flex flex--justify">
-              {%- liquid
-                assign breadcrumbs_class = 'product__breadcrumbs ' | append: section.settings.breadcrumbs_color_scheme_text | append: ' '
-                unless product.gift_card? == false
-                  assign breadcrumbs_class = breadcrumbs_class | append: ' small-hide '
-                endunless
-                if settings.enable_breadcrumbs_on_product_page
-                  render 'breadcrumbs', alignment: 'start', class: breadcrumbs_class
-                endif
-
-                assign desktop_tags_class = 'product__tags small-hide medium-hide ' | append: section.settings.tags_color_scheme_text | append: ' '
-                render 'product-tags', class: desktop_tags_class, product_ref: product
-
-                assign tags_class = 'product__tags small-hide large-up-hide '
-                render 'product-tags', class: tags_class, product_ref: product
-              -%}
-            </div>
-          </div>
-        </div>
 
         <div class="grid__item product__grid__item product__grid__item--content">
           <div class="product__content {{ section.settings.horizontal_alignment }} {% if section.settings.show_tags_on_mobile %}product__content--has-mobile-tags {% endif %}">
@@ -289,7 +298,7 @@
               {%- case block.type -%}
 
                 {%- when 'title' -%}
-                <h1 class="h2 product__title" {{ block.shopify_attributes }}>{{- product.title | escape -}}</h1>
+                <h1 class="product__title" {{ block.shopify_attributes }}>{{- product.title | escape -}}</h1>
                 {%- when 'text' -%}
                 <p class="product__text product__text--{{- block.settings.text_style }} caption caption--small" {{ block.shopify_attributes }}>
                   {%- liquid
@@ -320,7 +329,7 @@
                 <div id="Product-Price-{{- section.id -}}" role="status" {{ block.shopify_attributes }}>
                   <div class="product__price{% unless current_selling_plan_allocation == nil %} product__price--subscription{% endunless %}">
                     {%- unless product.gift_card? -%}
-                      {%- render 'price', product_ref: product, use_variant: true, price_extra_info: block.settings.show_price_extra_info, show_sale_badge: true -%}
+                      {%- render 'price', product_ref: product, use_variant: true, price_extra_info: false, show_sale_badge: false, skip_currency_code: true -%}
                       {% unless current_selling_plan_allocation == nil %}
                         <p class="product__price-subscription text-navigation-button">{{- 'products.product.price.subscription' | t -}}</p>
                       {% endunless %}
@@ -333,7 +342,7 @@
                           </p>
                       {% endif %}
                     {%- else -%}
-                      {%- render 'price', product_ref: product, use_variant: true, show_sale_badge: true -%}
+                      {%- render 'price', product_ref: product, use_variant: true, show_sale_badge: false, skip_currency_code: true -%}
                     {%- endunless -%}
                   </div>
                   {%- if product.metafields.theme.preorder.value -%}
@@ -358,6 +367,7 @@
                   {%- if settings.show_product_groups == 'both' or settings.show_product_groups == 'product' -%}
                     {%- render 'product-groups', product: product, on: 'product' -%}
                   {%- endif -%}
+                  {%- render 'product-colour-swatches', product: product -%}
                   {%- render 'main-product__variant-picker', product: product, section: section, block: block, product_form_id: product_form_id, product_form_installments_id: product_form_installments_id, back_in_stock: block.settings.back_in_stock -%}
 
                 {%- when 'purchase_options' -%}
@@ -434,12 +444,12 @@
                       if block.settings.show_dynamic_checkout
                         assign button_style = 'solid'
                       endif
-                      render 'button', type: 'submit', name: 'add', style: button_style, value: value, class: 'button product-selector__submit no-js-hidden', disabled: disabled
+                      render 'button', type: 'submit', name: 'add', button_style: 'button--filled', value: value, class: 'button product-selector__submit no-js-hidden', disabled: disabled, fullwidth: true
                       assign value = nil
                       assign disabled = nil
 
                       assign no_js_value = 'products.product.add_to_cart' | t
-                      render 'button', type: 'submit', name: 'add', style: button_style, value: no_js_value, class: 'button product-selector__submit no-js'
+                      render 'button', type: 'submit', name: 'add', button_style: 'button--filled', value: no_js_value, class: 'button product-selector__submit no-js', fullwidth: true
                     -%}
 
                     <p class="color-alert hidden" data-error-wrapper></p>
@@ -465,6 +475,7 @@
                   {%- endform -%}
 
                 </product-form>
+                {%- render 'product-pdp-lower', product: product, section: section -%}
                 {%- when 'description' -%}
                   {% if block.settings.behaviour == 'plain' %}
                     {%- if product.description != blank -%}
@@ -648,7 +659,9 @@
                   {%- if product.gift_card? -%}
                     {%- continue -%}
                   {%- endif -%}
-                  {{- block.settings.custom_liquid -}}
+                  <div class="product__custom-liquid" {{ block.shopify_attributes }}>
+                    {{- block.settings.custom_liquid -}}
+                  </div>
                 {%- when 'inventory_notice' -%}
                   {%- if product.gift_card? -%}
                     {%- continue -%}
@@ -800,7 +813,7 @@
                     </accordion-default>
                   {% endif %}
                 {%- else -%}
-                  <div class="product__app-block" {{ block.shopify_attributes }}>
+                  <div class="product__app-block{% if block.type contains 'loox-rating' %} product__rating{% endif %}" {{ block.shopify_attributes }}>
                     {%- render block -%}
                   </div>
               {%- endcase -%}
@@ -811,6 +824,40 @@
     </div>
   </section>
 </div>
+
+<script>
+  (function () {
+    var reviewLabel = {{ 'products.product.reviews_count' | t: count: '__COUNT__' | json }};
+    function formatLooxReviews(root) {
+      if (!root) return;
+      var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        var text = node.textContent.trim();
+        var match = text.match(/^\((\d+)\)$/);
+        if (match) {
+          node.textContent = reviewLabel.replace('__COUNT__', match[1]);
+        }
+      });
+    }
+    function run() {
+      document.querySelectorAll('.product__rating, .product__content .loox-rating').forEach(formatLooxReviews);
+    }
+    var reviewTimer;
+    function schedule() {
+      clearTimeout(reviewTimer);
+      reviewTimer = setTimeout(run, 60);
+    }
+    run();
+    document.addEventListener('DOMContentLoaded', run);
+    var content = document.querySelector('.product__content');
+    if (content && typeof MutationObserver === 'function') {
+      var observer = new MutationObserver(schedule);
+      observer.observe(content, { childList: true, subtree: true });
+    }
+  })();
+</script>
 
 {%- liquid
   if product.selected_or_first_available_variant.featured_media
@@ -958,6 +1005,13 @@
       "id": "slider_background_color_transparent",
       "label": "t:sections.main-product.settings.slider_background_color_transparent.label",
       "default": false
+    },
+    {
+      "type": "text",
+      "id": "model_info",
+      "label": "Model info",
+      "info": "Shown on the gallery image, left-aligned. Override per product with metafield custom.model_info or theme.model_info.",
+      "default": "Model is 1.81m Wearing Size 32\""
     },
     {
       "type": "header",
