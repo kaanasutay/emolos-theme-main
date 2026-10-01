@@ -122,9 +122,10 @@ class CartItems extends HTMLElement {
   }
 
   getSectionInnerHTML(html, selector) {
-    return new DOMParser()
+    const el = new DOMParser()
       .parseFromString(html, 'text/html')
-      .querySelector(selector).innerHTML;
+      .querySelector(selector);
+    return el ? el.innerHTML : '';
   }
 
   updateLiveRegions(line, itemCount) {

@@ -97,6 +97,14 @@ html.no-js .hero__swiper-slide {
   height: 100%;
 }
 
+.hero-banner--full .hero__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .hero-banner--split .hero__media {
   padding: 0;
   height: 100%;
@@ -219,7 +227,6 @@ html.no-js .hero__swiper-slide {
   .hero__inner {
     text-align: center;
     align-items: flex-end;
-    /* justify-content: center; */
   }
 
   .hero__inner.hero-banner--30-70,
@@ -229,6 +236,34 @@ html.no-js .hero__swiper-slide {
 
   .hero__inner.hero-banner--50-50 {
     grid-template-rows: 2fr 2fr;
+  }
+
+  .hero-banner--full .hero__content,
+  .hero-banner--full .hero__content.align-start,
+  .hero-banner--full .hero__content.align-end,
+  .hero-banner--full .hero__content.text-left,
+  .hero-banner--full .hero__content.text-right,
+  .hero-banner--full .hero__content.text-start,
+  .hero-banner--full .hero__content.text-end {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero-banner--full .hero__title,
+  .hero-banner--full .hero__subtitle,
+  .hero-banner--full .hero__entry,
+  .hero-banner--full .hero__entry p,
+  .hero-banner--full .hero__button {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .hero-banner--full .hero__content {
+    padding-block-end: 2.4rem;
+  }
+
+  .hero-banner--full .hero__button {
+    margin-block-end: 0;
   }
 }
 
@@ -367,5 +402,134 @@ html.no-js .hero__swiper-slide {
 
   .hero-banner .hero__title {
     font-size: 6rem;
+  }
+}
+
+/* Carpe Omnia hero overlay: full-minus-header photo, bottom-centered copy */
+.hero-banner .hero-banner--full .media--overlay:after {
+  background-image: none;
+  background-color: rgba(23, 23, 23, 0.12);
+}
+
+.hero-banner .hero-banner--full .hero__content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 20px 20px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  text-align: center;
+  color: #fff;
+}
+
+.hero-banner .hero-banner--full .hero__content::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -80px -40px;
+  background: radial-gradient(rgba(0, 0, 0, 0.16) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-banner .hero-banner--full.hero__inner--vertical-line .hero__content::after {
+  display: none;
+}
+
+.hero-banner .hero-banner--full .hero__title,
+.hero-banner .hero-banner--full .hero__subtitle,
+.hero-banner .hero-banner--full .hero__entry,
+.hero-banner .hero-banner--full .hero__entry p,
+.hero-banner .hero-banner--full .hero__button {
+  margin-inline: auto;
+  text-align: center;
+  color: #fff;
+}
+
+.hero-banner .hero-banner--full .hero__title {
+  font-family: var(--font-heading-family);
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  margin: 0 0 15px;
+  color: #fff;
+}
+
+.hero-banner .hero-banner--full .hero__subtitle {
+  font-family: var(--font-body-family);
+  font-size: 14.4px;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0;
+  text-transform: none;
+  margin: 0;
+  color: #fff;
+}
+
+.hero-banner .hero-banner--full .hero__entry {
+  margin: 0;
+  max-width: none;
+}
+
+.hero-banner .hero-banner--full .hero__entry p {
+  font-size: 14.4px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #fff;
+}
+
+.hero-banner .hero-banner--full .hero__button {
+  margin: 14px 0 0;
+}
+
+.hero-banner .hero-banner--full .hero__button .button {
+  min-width: 0;
+  width: auto;
+  height: auto;
+  padding: 13.2px 25px;
+  border: 0 !important;
+  border-radius: 3px;
+  background: #fff !important;
+  color: #232323 !important;
+  font-family: var(--font-button-family);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-banner .hero-banner--full .hero__button .button:hover {
+  background: #232323 !important;
+  color: #fff !important;
+}
+
+@media screen and (min-width: 750px) {
+  .hero-banner .hero-banner--full .hero__content {
+    padding: 50px;
+  }
+
+  .hero-banner .hero-banner--full .hero__title {
+    font-size: 44px;
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+  }
+
+  .hero-banner .hero-banner--full .hero__subtitle,
+  .hero-banner .hero-banner--full .hero__entry p {
+    font-size: 16.2px;
+    line-height: 1.6;
+  }
+}
+
+@media screen and (min-width: 1100px) {
+  .hero-banner .hero-banner--full .hero__content {
+    padding: 70px;
   }
 }
