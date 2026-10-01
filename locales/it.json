@@ -477,6 +477,8 @@
     "continue_shopping": "Continua lo shopping",
     "remove": "Rimuovi",
     "subtotal": "Subtotale",
+    "you_may_like": "You may like",
+    "shipping_and_discounts_at_checkout": "Shipping and discounts calculated at checkout.",
     "taxes_and_shipping_at_checkout": "Tasse e spedizione calcolate al momento del checkout",
     "taxes_included_and_shipping_policy_html": "Tasse incluse. <a href=\"{{ link }}\">Spedizione</a> calcolata al momento del checkout.",
     "taxes_included_but_shipping_at_checkout": "Tasse incluse",

@@ -477,6 +477,8 @@
     "continue_shopping": "مواصلة التسوق",
     "remove": "إزالة",
     "subtotal": "المجموع الفرعي",
+    "you_may_like": "You may like",
+    "shipping_and_discounts_at_checkout": "Shipping and discounts calculated at checkout.",
     "taxes_and_shipping_at_checkout": "سيتم حساب الضرائب والشحن عند الدفع",
     "taxes_included_and_shipping_policy_html": "تشمل الضريبة. <a href=\"{{ link }}\">الشحن</a> محسوبة عند الدفع.",
     "taxes_included_but_shipping_at_checkout": "تشمل الضريبة",

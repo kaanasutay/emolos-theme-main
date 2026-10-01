@@ -339,6 +339,15 @@
       "clear_filter": "Clear filter",
       "reset": "Reset",
       "sort_by_label": "Sort by"
+    },
+    "plp": {
+      "filter_sort": "Filter | Sort",
+      "filters_sort": "Filters | Sort",
+      "view_all": "View All",
+      "all": "All {{ title }}",
+      "applied_filters": "Applied Filters",
+      "remove_all": "Remove All",
+      "apply": "Apply"
     }
   },
   "gift_cards": {
@@ -357,11 +366,13 @@
     }
   },
   "cart": {
-    "title": "My Cart",
-    "empty": "Your Cart Is Empty",
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
     "continue_shopping": "Continue shopping",
     "remove": "Remove",
     "subtotal": "Subtotal",
+    "you_may_like": "You may like",
+    "shipping_and_discounts_at_checkout": "Shipping and discounts calculated at checkout.",
     "taxes_and_shipping_at_checkout": "Taxes and shipping calculated at checkout",
     "taxes_included_and_shipping_policy_html": "Tax included. <a href=\"{{ link }}\">Shipping</a> calculated at checkout.",
     "taxes_included_but_shipping_at_checkout": "Tax included",
@@ -466,7 +477,7 @@
       "add_to_cart_success": "Added to cart",
       "add_to_cart_error": "Something went wrong! Please try again later.",
       "show_sizes": "Show sizes",
-      "view_full_product": "View full product"
+      "view_full_product": "View full details"
     },
     "product": {
       "title": "Product heading",
@@ -509,17 +520,34 @@
         "per_unit_html": "{{ price }} / unit"
       },
       "tabs": {
-        "description": "Description",
+        "description": "DESCRIPTION",
         "specs": "Specs",
         "fit_guide": "Fit guide",
-        "size_guide": "Size guide"
+        "size_guide": "Size guide",
+        "delivery": "DELIVERY",
+        "returns": "RETURNS"
       },
+      "unlock_offer": "UNLOCK 30% OFF",
+      "bundle": {
+        "kicker": "3 item pack",
+        "subheading": "Add {{ count }} items and unlock {{ percent }}% off.",
+        "bar_title": "{{ count }} item pack"
+      },
+      "trust": {
+        "fast_delivery": "Fast Delivery",
+        "hassle_free_returns": "Hassle Free Returns",
+        "secure_payment": "Secure Payment Methods"
+      },
+      "delivery_fallback": "UK Standard Delivery 2–3 days. Free UK delivery over the current threshold. International options are calculated at checkout.",
+      "returns_fallback": "We offer a 14 day return period from the date that you have received your order. Items must be unworn, unwashed, and returned with original tags attached.",
       "show_full_product": "Shop Full Product",
       "badges": {
         "sold_out": "Sold out",
         "unavailable": "Unavailable",
         "new": "New",
-        "sale": "Sale"
+        "sale": "Sale",
+        "percent_sale": "{{ percent }} % SALE",
+        "percent_off": "{{ percent }}% off"
       },
       "media": {
         "open_media": "Open media {{ index }} in modal"
@@ -528,6 +556,11 @@
         "label": "Media gallery"
       },
       "size_guide": "Size guide",
+      "size_chart": "Size Chart",
+      "reviews_count": "{{ count }} reviews",
+      "size_charts": "Size Charts",
+      "size_chart_cm": "CM",
+      "size_chart_inches": "INCHES",
       "pickup_availability": {
         "popup": {
           "title": "Pickup availabilities"
