@@ -1,17 +1,85 @@
 announcement-bar-slider {
-  display: block;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 56px;
 }
 
-.bar {
-  color: rgb(var(--color-heading-text));
-  font-size: var(--font-size-static-xxs, 1.1rem);
-  font-weight: var(--font-weight-normal);
-  letter-spacing: var(--letter-spacing-sm);
-  line-height: 1.1;
+.bar,
+.js-announcement-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  color: #ffffff;
+  font-family: var(--font-body-family);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1;
   text-transform: uppercase;
   text-align: center;
-  background-color: rgb(var(--color-background));
-  padding: .8rem 0;
+  white-space: normal;
+  background-color: #000000;
+  background-image: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+.bar > .container,
+.bar__inner,
+.bar .swiper,
+.bar .swiper-wrapper,
+.bar .swiper-slide,
+.bar__text-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 56px;
+  min-height: 56px;
+  max-height: 56px;
+  margin: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  text-align: center;
+}
+
+.bar > .container {
+  --padding-block-start: 0px;
+  --padding-block-end: 0px;
+  --section-height: 56px;
+  padding-block-start: 0;
+  padding-block-end: 0;
+}
+
+.bar .swiper-wrapper {
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.bar p,
+.bar strong,
+.bar a {
+  margin: 0;
+  padding: 0;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  letter-spacing: inherit;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+}
+
+.bar p {
+  position: relative;
+  top: 4px;
 }
 .section--announcement-bar {
   z-index: calc(var(--z-header) -1);
@@ -42,19 +110,29 @@ html.no-js .bar__swiper .swiper-wrapper {
   gap: 0.8rem;
 }
 
-@media screen and (max-width: 750px) {
+@media screen and (max-width: 749px) {
   .bar__countdown-timer__text-content {
     flex-direction: row;
   }
 
-  .bar {
-    font-size: 1.25rem;
+  .bar,
+  .js-announcement-bar {
+    height: 56px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    padding: 0;
   }
 }
 
 @media screen and (min-width: 750px) {
-  .bar {
-    padding: 1.2rem 0;
+  .bar,
+  .js-announcement-bar {
+    height: 56px;
+    font-size: 14px;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    padding: 0;
   }
   .bar__countdown-timer__text-content {
     flex-direction: row;
@@ -91,7 +169,7 @@ announcement-bar-dropdown[open] {
 
 
 .bar p {
-  margin: 0 0 1rem;
+  margin: 0;
 }
 
 .bar .bar__countdown-timer__text-content p {

@@ -50,7 +50,9 @@
           "cee0c4f6-5546-43a3-bfc3-2f3afa36d9d5"
         ],
         "settings": {
-          "slider_autoplay_interval": 5
+          "slider_autoplay_interval": 5,
+          "spacing_top": "0",
+          "spacing_bottom": "0"
         }
       },
       "header": {
