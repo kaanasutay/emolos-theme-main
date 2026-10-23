@@ -1,33 +1,45 @@
 .reviews-lang-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 1.2rem;
     width: 100%;
     position: relative;
     z-index: 8;
-    margin: 0 0 1.6rem;
+    margin: 0 0 1.2rem;
     padding: 0;
   }
   
   .reviews-lang-bar__title {
     margin: 0;
     flex: 1 1 auto;
+    width: 100%;
     min-width: 0;
     font-family: var(--font-heading-family);
-    font-size: clamp(2.4rem, 3vw, 3.2rem);
+    font-size: 16px;
     font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-align: center !important;
+    text-transform: uppercase;
     color: #1b1b32;
+  }
+
+  @media screen and (min-width: 990px) {
+    .reviews-lang-bar__title {
+      font-size: 18px;
+    }
   }
   
   .reviews-lang {
-    position: relative;
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 0;
     flex: 0 0 auto;
-    margin-inline-start: auto;
+    margin: 0;
     font-family: var(--font-body-family);
     z-index: 12;
+    transform: translateY(-50%);
   }
   
   .reviews-lang__btn {
@@ -138,6 +150,49 @@
   #looxReviews.loox-widget,
   .loox-widget#looxReviews {
     overflow: visible !important;
+  }
+
+  #looxReviews [data-testid="rating-summary"],
+  #looxReviews .rating-summary,
+  .loox-widget [data-testid="rating-summary"] {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin-inline: auto !important;
+    text-align: center !important;
+  }
+
+  #looxReviews [data-testid="rating-summary-score"],
+  #looxReviews .rating-summary .score,
+  .loox-widget [data-testid="rating-summary-score"] {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    text-align: center !important;
+  }
+
+  #looxReviews [data-testid="rating-summary-score"] svg,
+  #looxReviews [data-testid="rating-summary"] svg.loox-icon,
+  .loox-widget [data-testid="rating-summary-score"] svg {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  #looxReviews [data-testid="rating-summary-count"],
+  .loox-widget [data-testid="rating-summary-count"] {
+    display: block !important;
+    width: 100% !important;
+    margin-top: 6px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    text-align: center !important;
   }
   
   #looxReviews.is-cloned {

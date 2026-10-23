@@ -1,16 +1,9 @@
 {%- comment -%}
-  Choixx-style PDP lower block: UNLOCK 30% OFF, trust rows, DESCRIPTION/DELIVERY/RETURNS.
-  Pack is 3 items at 30% (not Choixx 5 / 40%). DESCRIPTION starts expanded.
+  PDP lower block: Klarna row, trust rows, DESCRIPTION/DELIVERY/RETURNS.
+  DESCRIPTION starts expanded.
 {%- endcomment -%}
 
 {%- liquid
-  assign bundle_page = pages.bundle
-  if bundle_page != empty
-    assign unlock_url = bundle_page.url
-  else
-    assign unlock_url = '/pages/bundle'
-  endif
-
   assign delivery_html = ''
   if pages.shipping != empty and pages.shipping.content != blank
     assign delivery_html = pages.shipping.content
@@ -29,9 +22,10 @@
 -%}
 
 <div class="product-pdp-lower">
-  <a class="product-unlock-btn" href="{{- unlock_url -}}">
-    {{- 'products.product.unlock_offer' | t -}}
-  </a>
+  <div class="product-klarna">
+    <span class="product-klarna__badge" aria-hidden="true">K.</span>
+    <span class="product-klarna__text">{{- 'products.product.klarna_pay_later' | t -}}</span>
+  </div>
 
   <div class="product-trust-list">
     <p class="product-trust-list__item">
@@ -70,7 +64,11 @@
     <details class="accordion__section is-active" id="Details-description-{{ section.id }}" open>
       <summary class="accordion__button product-info-tabs__btn js-btn" id="Details-Summary-description-{{ section.id }}">
         <span>{{- 'products.product.tabs.description' | t -}}</span>
-        <span class="product-info-plus" aria-hidden="true"></span>
+        <span class="product-info-plus" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" focusable="false">
+            <path d="M4 6.25L8 10.25L12 6.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
       </summary>
       <div class="accordion__body" id="Details-Content-description-{{ section.id }}">
         <div class="accordion__body-inner rte">
@@ -84,7 +82,11 @@
     <details class="accordion__section" id="Details-delivery-{{ section.id }}">
       <summary class="accordion__button product-info-tabs__btn js-btn" id="Details-Summary-delivery-{{ section.id }}">
         <span>{{- 'products.product.tabs.delivery' | t -}}</span>
-        <span class="product-info-plus" aria-hidden="true"></span>
+        <span class="product-info-plus" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" focusable="false">
+            <path d="M4 6.25L8 10.25L12 6.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
       </summary>
       <div class="accordion__body" id="Details-Content-delivery-{{ section.id }}">
         <div class="accordion__body-inner rte">
@@ -100,7 +102,11 @@
     <details class="accordion__section" id="Details-returns-{{ section.id }}">
       <summary class="accordion__button product-info-tabs__btn js-btn" id="Details-Summary-returns-{{ section.id }}">
         <span>{{- 'products.product.tabs.returns' | t -}}</span>
-        <span class="product-info-plus" aria-hidden="true"></span>
+        <span class="product-info-plus" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" focusable="false">
+            <path d="M4 6.25L8 10.25L12 6.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
       </summary>
       <div class="accordion__body" id="Details-Content-returns-{{ section.id }}">
         <div class="accordion__body-inner rte">

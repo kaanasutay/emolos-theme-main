@@ -1460,8 +1460,7 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
   }
 
   .header__utils-item--search .drawer__button,
-  .header__utils-item--cart .header__utils-link,
-  .header__utils-item--locale .glc-switcher-btn {
+  .header__utils-item--cart .header__utils-link {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
@@ -1493,12 +1492,30 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
     display: none !important;
   }
 
-  .glc-switcher-expand,
-  .glc-dropdown-expand {
-    position: absolute !important;
-    top: 100% !important;
-    right: 0 !important;
-    width: auto !important;
+  .header__utils-item--search,
+  .header__utils-item--search desktop-drawer,
+  .header__utils-item--search .drawer,
+  .header__utils-item--search .drawer__container,
+  .header__utils-item--search .drawer__button {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: center !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 0 !important;
+  }
+
+  .header__utils-item--search .drawer__button {
+    width: 24px !important;
+  }
+
+  .header__utils-item--search .drawer__content {
+    height: auto !important;
+    min-height: 0 !important;
+    line-height: normal !important;
   }
 
   .glc-switcher-btn__flag-container,
@@ -1506,46 +1523,61 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
   .glc-switcher-btn__language,
   .glc-switcher-btn__name,
   .glc-switcher-btn__divider,
-  .glc-switcher-btn__currency,
-  .glc-switcher-btn svg,
-  .glc-switcher-btn img {
+  .glc-switcher-btn__currency {
     display: none !important;
   }
 
   .glc-dropdown-btn.glc-switcher-btn,
   .glc-switcher-btn--embedded {
     display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
-    gap: 1px;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: center !important;
+    gap: 2px;
     width: auto !important;
-    height: 24px;
-    max-width: none;
+    height: 24px !important;
+    min-height: 24px !important;
+    max-height: none !important;
+    margin: 0 !important;
     padding: 0 !important;
-    background: none !important;
+    line-height: 0 !important;
+    background: transparent !important;
     border: 0;
+    overflow: visible !important;
+    pointer-events: auto !important;
+    cursor: pointer;
   }
 
   .glc-dropdown-btn.glc-switcher-btn::before,
   .glc-switcher-btn--embedded::before {
-    content: "";
-    display: block;
-    flex: 0 0 24px;
-    width: 24px;
-    height: 24px;
+    content: "" !important;
+    display: block !important;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
     margin: 0;
-    background: center / 24px 24px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.25'/%3E%3Cpath d='M3.75 12h16.5M12 3.75c2.2 2.35 3.4 5.15 3.4 8.25s-1.2 5.9-3.4 8.25c-2.2-2.35-3.4-5.15-3.4-8.25s1.2-5.9 3.4-8.25z'/%3E%3C/svg%3E");
+    background: center / 22px 22px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111111' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='8.25'/%3E%3Cpath d='M3.75 12h16.5M12 3.75c2.2 2.35 3.4 5.15 3.4 8.25s-1.2 5.9-3.4 8.25c-2.2-2.35-3.4-5.15-3.4-8.25s1.2-5.9 3.4-8.25z'/%3E%3C/svg%3E");
   }
 
   .glc-dropdown-btn.glc-switcher-btn::after,
   .glc-switcher-btn--embedded::after {
-    content: "";
-    display: block;
-    flex: 0 0 10px;
-    width: 10px;
-    height: 10px;
-    margin: 0;
-    background: center / 10px 10px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%23111111' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5'/%3E%3C/svg%3E");
+    content: none !important;
+    display: none !important;
+    background: none !important;
+  }
+
+  .glc-switcher-btn__icon,
+  .glc-switcher-btn__icon-arrow,
+  .glc-switcher-btn svg {
+    display: inline-block !important;
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 22px;
+    max-height: 22px;
+    margin: 0 !important;
+    vertical-align: middle !important;
+    flex: 0 0 auto;
   }
 
   .header__drawer,
@@ -1567,14 +1599,7 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
     line-height: 0 !important;
   }
 
-  .header__utils-item--search desktop-drawer,
-  .header__utils-item--search .drawer,
-  .header__utils-item--search .drawer__container,
-  .header__utils-item--search .drawer__button,
-  .header__utils-item--cart .header__utils-link,
-  .header__utils-item--locale .glc-switcher-btn,
-  .glc-dropdown-btn.glc-switcher-btn,
-  .glc-switcher-btn--embedded {
+  .header__utils-item--cart .header__utils-link {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -1589,13 +1614,5 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
 
   .header__utils-item--search .drawer__button::-webkit-details-marker {
     display: none;
-  }
-
-  .glc-dropdown-btn.glc-switcher-btn::before,
-  .glc-switcher-btn--embedded::before,
-  .glc-dropdown-btn.glc-switcher-btn::after,
-  .glc-switcher-btn--embedded::after {
-    align-self: center !important;
-    margin: 0 !important;
   }
 }

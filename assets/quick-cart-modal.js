@@ -245,6 +245,19 @@ if (!customElements.get('quick-cart-modal')) {
 
       this.querySelectorAll('.quick-cart-size-chart__trigger').forEach(trigger => {
         trigger.addEventListener('click', event => {
+          const dialogId = trigger.getAttribute('aria-controls');
+          const dialog = dialogId ? document.getElementById(dialogId) : null;
+          if (dialog) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (dialog.parentElement !== document.body) document.body.appendChild(dialog);
+            if (typeof dialog.showModal === 'function') {
+              if (!dialog.open) dialog.showModal();
+            } else {
+              dialog.setAttribute('open', '');
+            }
+            return;
+          }
           event.preventDefault();
           event.stopPropagation();
           open();

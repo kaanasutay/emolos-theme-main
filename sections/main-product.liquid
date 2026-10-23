@@ -288,6 +288,85 @@
 
         <div class="grid__item product__grid__item product__grid__item--content">
           <div class="product__content {{ section.settings.horizontal_alignment }} {% if section.settings.show_tags_on_mobile %}product__content--has-mobile-tags {% endif %}">
+            {%- liquid
+              assign pdp_rating_value = 0
+              assign pdp_rating_count = 0
+              if product.metafields.reviews.rating.value.rating != blank
+                assign pdp_rating_value = product.metafields.reviews.rating.value.rating
+              elsif product.metafields.loox.avg_rating.value != blank
+                assign pdp_rating_value = product.metafields.loox.avg_rating.value
+              elsif product.metafields.loox.avg_rating != blank
+                assign pdp_rating_value = product.metafields.loox.avg_rating
+              endif
+              if product.metafields.reviews.rating_count.value != blank
+                assign pdp_rating_count = product.metafields.reviews.rating_count.value | plus: 0
+              elsif product.metafields.reviews.rating_count != blank
+                assign pdp_rating_count = product.metafields.reviews.rating_count | plus: 0
+              elsif product.metafields.loox.num_reviews.value != blank
+                assign pdp_rating_count = product.metafields.loox.num_reviews.value | plus: 0
+              elsif product.metafields.loox.num_reviews != blank
+                assign pdp_rating_count = product.metafields.loox.num_reviews | plus: 0
+              endif
+
+              if pdp_rating_count == 0
+                assign pdp_groups = metaobjects[settings.metaobject_for_product_groups]
+                if pdp_groups != blank
+                  for pdp_group in pdp_groups.values
+                    assign pdp_group_has_product = false
+                    assign pdp_best_count = 0
+                    assign pdp_best_value = 0
+                    for pdp_group_product in pdp_group.group.value
+                      if pdp_group_product.id == product.id
+                        assign pdp_group_has_product = true
+                      endif
+                      assign pdp_sibling_count = 0
+                      if pdp_group_product.metafields.reviews.rating_count.value != blank
+                        assign pdp_sibling_count = pdp_group_product.metafields.reviews.rating_count.value | plus: 0
+                      elsif pdp_group_product.metafields.loox.num_reviews.value != blank
+                        assign pdp_sibling_count = pdp_group_product.metafields.loox.num_reviews.value | plus: 0
+                      elsif pdp_group_product.metafields.loox.num_reviews != blank
+                        assign pdp_sibling_count = pdp_group_product.metafields.loox.num_reviews | plus: 0
+                      endif
+                      if pdp_sibling_count > pdp_best_count
+                        assign pdp_best_count = pdp_sibling_count
+                        if pdp_group_product.metafields.reviews.rating.value.rating != blank
+                          assign pdp_best_value = pdp_group_product.metafields.reviews.rating.value.rating
+                        elsif pdp_group_product.metafields.loox.avg_rating.value != blank
+                          assign pdp_best_value = pdp_group_product.metafields.loox.avg_rating.value
+                        elsif pdp_group_product.metafields.loox.avg_rating != blank
+                          assign pdp_best_value = pdp_group_product.metafields.loox.avg_rating
+                        endif
+                      endif
+                    endfor
+                    if pdp_group_has_product and pdp_best_count > pdp_rating_count
+                      assign pdp_rating_count = pdp_best_count
+                      assign pdp_rating_value = pdp_best_value
+                    endif
+                  endfor
+                endif
+              endif
+
+              assign pdp_rating_filled = pdp_rating_value | round
+              if pdp_rating_filled > 5
+                assign pdp_rating_filled = 5
+              endif
+              if pdp_rating_filled < 0
+                assign pdp_rating_filled = 0
+              endif
+              assign pdp_rating_text = pdp_rating_value | round: 1
+            -%}
+            <div class="product__rating-static"{% if pdp_rating_count > 0 %} aria-label="{{ pdp_rating_text }} ({{ pdp_rating_count }} reviews)"{% endif %}>
+              <span class="product__rating-static__stars" aria-hidden="true">
+                {%- for i in (1..5) -%}
+                  <svg width="14" height="14" viewBox="0 0 12 12" fill="none" focusable="false">
+                    <path d="M6 0.8L7.35 4.35L11.2 4.65L8.3 7.2L9.15 11L6 9.05L2.85 11L3.7 7.2L0.8 4.65L4.65 4.35L6 0.8Z" fill="{% if i <= pdp_rating_filled %}#111111{% else %}#D9D9D9{% endif %}"></path>
+                  </svg>
+                {%- endfor -%}
+              </span>
+              {%- if pdp_rating_count > 0 -%}
+                <span class="product__rating-static__count">{{ pdp_rating_text }} ({{ pdp_rating_count }} reviews)</span>
+              {%- endif -%}
+            </div>
             {%- if section.settings.show_tags_on_mobile -%}
               <div class="product__tags medium-hide large-up-hide">
                 {%- render 'product-tags', product_ref: product -%}
@@ -830,16 +909,32 @@
     var reviewLabel = {{ 'products.product.reviews_count' | t: count: '__COUNT__' | json }};
     function formatLooxReviews(root) {
       if (!root) return;
+      var avg = '';
+      var rated = root.matches('[data-rating], [data-average]') ? root : root.querySelector('[data-rating], [data-average]');
+      if (rated) avg = rated.getAttribute('data-rating') || rated.getAttribute('data-average') || '';
       var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
       var nodes = [];
       while (walker.nextNode()) nodes.push(walker.currentNode);
+      var countNode = null;
+      var count = '';
       nodes.forEach(function (node) {
         var text = node.textContent.trim();
-        var match = text.match(/^\((\d+)\)$/);
-        if (match) {
-          node.textContent = reviewLabel.replace('__COUNT__', match[1]);
+        if (/^\d+(?:\.\d+)? \(\d+ reviews\)$/i.test(text)) return;
+        var paren = text.match(/^\((\d+)\)(?:\s*reviews)?$/i);
+        var labeled = text.match(/^(\d+)\s+reviews$/i);
+        if (paren || labeled) {
+          countNode = node;
+          count = (paren || labeled)[1];
+          return;
+        }
+        if (!avg && /^\d+(?:\.\d+)?$/.test(text)) {
+          avg = text;
+          if (node.textContent !== '') node.textContent = '';
         }
       });
+      if (!countNode || !count) return;
+      var label = (avg ? avg + ' ' : '') + '(' + count + ' reviews)';
+      if (countNode.textContent.trim() !== label) countNode.textContent = label;
     }
     function run() {
       document.querySelectorAll('.product__rating, .product__content .loox-rating').forEach(formatLooxReviews);

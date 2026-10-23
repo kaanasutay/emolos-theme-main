@@ -42,14 +42,23 @@
   endif
 
   assign product_count = collection.products_count | default: 0
+  assign plp_seen = '|'
+  if plp_menu != blank
+    for link in plp_menu.links
+      assign plp_seen = plp_seen | append: link.url | append: '|'
+      if link.object.handle != blank
+        assign plp_seen = plp_seen | append: link.object.handle | append: '|'
+      endif
+    endfor
+  endif
 -%}
 
 {{- 'section-collection-plp.css' | asset_url | stylesheet_tag -}}
 
-<div class="collection-plp">
-  {%- if plp_menu != blank and plp_menu.links.size > 0 -%}
-    <nav class="collection-plp__menu" aria-label="{{- collection.title | escape -}}">
-      <ul class="collection-plp__menu-list list-unstyled">
+<div class="collection-plp collection-sticky-header-wrapper">
+  <nav class="collection-plp__menu" aria-label="{{- collection.title | escape -}}">
+    <ul class="collection-plp__menu-list list-unstyled">
+      {%- if plp_menu != blank and plp_menu.links.size > 0 -%}
         {%- for link in plp_menu.links -%}
           <li class="collection-plp__menu-item">
             <a
@@ -62,9 +71,26 @@
             <span class="collection-plp__dot" aria-hidden="true"></span>
           </li>
         {%- endfor -%}
-      </ul>
-    </nav>
-  {%- endif -%}
+      {%- endif -%}
+      {%- for extra_collection in collections -%}
+        {%- assign extra_key = '|' | append: extra_collection.handle | append: '|' -%}
+        {%- unless plp_seen contains extra_key -%}
+          {%- if extra_collection.products_count > 0 -%}
+            <li class="collection-plp__menu-item">
+              <a
+                href="{{- extra_collection.url -}}"
+                class="collection-plp__menu-link{% if extra_collection.handle == collection.handle %} is-active{% endif %}"
+                {% if extra_collection.handle == collection.handle %}aria-current="page"{% endif %}
+              >
+                {{- extra_collection.title | escape -}}
+              </a>
+              <span class="collection-plp__dot" aria-hidden="true"></span>
+            </li>
+          {%- endif -%}
+        {%- endunless -%}
+      {%- endfor -%}
+    </ul>
+  </nav>
 
   <div class="collection-plp__heading">
     <div class="collection-plp__title-row">
@@ -135,6 +161,17 @@
 </div>
 
 <script>
+  (function () {
+    function syncPlpStickyOffset() {
+      var group = document.querySelector('.shopify-section-group-header-group');
+      var header = document.querySelector('.section-header');
+      var headerHeight = group ? group.offsetHeight : (header ? header.offsetHeight : 66);
+      document.documentElement.style.setProperty('--plp-sticky-top', headerHeight + 'px');
+    }
+    syncPlpStickyOffset();
+    window.addEventListener('resize', syncPlpStickyOffset);
+    window.addEventListener('load', syncPlpStickyOffset);
+  })();
   document.getElementById('CollectionPlpFilter-{{ section.id }}')?.addEventListener('click', function () {
     const details = document.getElementById('Filters-drawer-{{ section.id }}');
     const summary = details?.querySelector('summary');

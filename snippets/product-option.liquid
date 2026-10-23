@@ -76,6 +76,28 @@
   elsif swatch_value
     assign visually_hidden = 'false'
   endif
+
+  assign size_num = ''
+  assign size_len = ''
+  assign option_label = value.label | default: value.name | strip
+  if where == 'product' and option != blank
+    assign size_option_down = option.name | downcase
+    assign sizes_setting_down = settings.sizes_option | downcase
+    if size_option_down == 'size' or size_option_down == sizes_setting_down
+      if option_label contains ' '
+        assign size_parts = option_label | split: ' '
+        assign size_num = size_parts | first
+        assign size_len = option_label | remove_first: size_num | strip
+      elsif option_label contains '/'
+        assign size_parts = option_label | split: '/'
+        assign size_num = size_parts | first | strip
+        assign size_len = size_parts | last | strip
+      endif
+      if size_len == blank
+        assign size_num = ''
+      endif
+    endif
+  endif
 -%}
 
 <div class="product-options__item{% if option_image != nil %} product-options__item--image product-options__item--colour-image{% elsif swatch_value %} product-options__item--swatch swatch--{{ settings.swatch_shape }}{% endif %}{% if class != '' %} {{ class }}{% endif %}"{% if swatch_value %} style="--swatch-background: {{ swatch_value }};{% if swatch_focal_point %} --swatch-focal-point: {{ swatch_focal_point }};{% endif %}"{% endif %}>
@@ -104,6 +126,9 @@
         {%- assign option_image_alt = value.label | default: value.name -%}
         {%- render 'image', image: option_image, width: 120, alt: option_image_alt -%}
       </div>
+    {%- elsif size_num != blank and size_len != blank -%}
+      <span class="size-num">{{- size_num | escape -}}</span>
+      <span class="size-len">{{- size_len | escape -}}</span>
     {%- else -%}
       <span>{{- value.label | default: value.name | escape -}}</span>
     {%- endif -%}

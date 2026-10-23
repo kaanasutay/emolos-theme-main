@@ -1122,22 +1122,20 @@ class AccordionDefault extends HTMLElement {
     this.setInitialAccessibilityAttr();
 
     this.addEventListener('click', e => {
-      let isBtn =
-        e.target.classList.contains('accordion__button') ||
-        e.target.closest('svg');
-      const svgElement = e.target.closest('svg');
-
-      if (!isBtn) {
-        isBtn = e.target.classList.contains('js-btn');
-      }
-
-      if (svgElement) {
-        const summary = svgElement.closest('summary');
-
-        if (summary) {
-          summary.click();
+      const directLink = e.target.closest('a[href]');
+      if (directLink && this.contains(directLink)) {
+        const href = directLink.getAttribute('href') || '';
+        if (href && href !== '#' && href.indexOf('javascript:') !== 0) {
+          return;
         }
       }
+
+      const summaryHit = e.target.closest('summary');
+      let isBtn =
+        e.target.classList.contains('accordion__button') ||
+        e.target.classList.contains('js-btn') ||
+        !!e.target.closest('svg') ||
+        !!(summaryHit && this.contains(summaryHit));
 
       if (!isBtn) {
         return;
@@ -1145,9 +1143,8 @@ class AccordionDefault extends HTMLElement {
 
       e.preventDefault();
 
-      const targetBtn =
-        e.target.closest('summary') ||
-        e.target.closest('svg').closest('summary');
+      const targetBtn = e.target.closest('summary');
+      if (!targetBtn) return;
 
       this.toggleDropdown(targetBtn);
       this.collapseInactiveItems(targetBtn);

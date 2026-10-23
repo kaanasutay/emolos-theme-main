@@ -146,6 +146,43 @@
         <accordion-default class="accordion">
           <nav class="drawer__nav">
             <ul class="drawer__menu list-unstyled" role="list">
+              {%- liquid
+                assign mobile_spring_url = '/collections/all-products'
+                if collections['spring-summer-26'] != empty
+                  assign mobile_spring_url = collections['spring-summer-26'].url
+                elsif collections['spring-summer-2026'] != empty
+                  assign mobile_spring_url = collections['spring-summer-2026'].url
+                endif
+                assign mobile_tracksuits_url = '/collections/all-products'
+                if collections['tracksuits'] != empty
+                  assign mobile_tracksuits_url = collections['tracksuits'].url
+                elsif collections['tracksuit'] != empty
+                  assign mobile_tracksuits_url = collections['tracksuit'].url
+                endif
+                assign mobile_sets_url = '/collections/all-products'
+                if collections['two-piece-sets'] != empty
+                  assign mobile_sets_url = collections['two-piece-sets'].url
+                elsif collections['two-piece-set'] != empty
+                  assign mobile_sets_url = collections['two-piece-set'].url
+                endif
+                assign mobile_knit_url = '/collections/all-products'
+                if collections['knitwear'] != empty
+                  assign mobile_knit_url = collections['knitwear'].url
+                endif
+              -%}
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/new-arrivals">NEW ARRIVALS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="{{ mobile_spring_url }}">SPRING/SUMMER 26</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/best-sellers">BESTSELLERS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="{{ mobile_tracksuits_url }}">TRACKSUITS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="{{ mobile_sets_url }}">TWO-PIECE SETS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/essential-t-shirt-men">T-SHIRTS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="{{ mobile_knit_url }}">KNITWEAR</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/polo-shirt">POLO'S &amp; SHIRTS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/cargo-pants-for-men">TROUSERS &amp; CARGOS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/hoodies">HOODIES &amp; SWEATSHIRTS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/denim-jacket">JACKETS</a></li>
+              <li class="drawer__menu-item"><a class="drawer__nav-link h4" href="/collections/mens-denim-shorts">SHORTS</a></li>
+              {%- if false -%}
               {%- for link in menu.links -%}
                 {%- assign link_item_index = forloop.index -%}
                 {%- assign menu_dropdown_images_size = 0 -%}
@@ -185,8 +222,18 @@
                   {%- endfor -%}
                 {%- endcapture -%}
 
+                {%- capture menu_href_raw -%}
+                  {%- render 'menu-collection-href', title: link.title, url: link.url -%}
+                {%- endcapture -%}
+                {%- assign menu_href_parts = menu_href_raw | strip | split: '|' -%}
+                {%- assign menu_mapped = menu_href_parts | first -%}
+                {%- assign menu_href = menu_href_parts | last -%}
                 <li class="drawer__menu-item">
-                  {%- if link.links.size > 0 or menu_dropdown_images_size > 0 -%}
+                  {%- if menu_mapped == '1' and menu_href != blank and menu_href != '#' -%}
+                    <a href="{{- menu_href -}}" class="drawer__nav-link h4{% if link.current %} is-current{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
+                      {{- link.title | escape -}}
+                    </a>
+                  {%- elsif link.links.size > 0 or menu_dropdown_images_size > 0 -%}
                     <details class="accordion__section" id="Details-menu-drawer-menu-item-{{- forloop.index -}}">
                       <summary class="drawer__nav-link h4 js-btn{% if link.child_active %} is-current{% endif %}">
                         {{- link.title | escape -}}
@@ -207,17 +254,30 @@
                             <ul class="drawer__menu list-unstyled" role="list">
                               {%- for child_link in link.links -%}
                                 <li class="drawer__submenu-first-item">
-                                  {%- if child_link.links.size > 0 and section.settings.drawer_layer -%}
+                                  {%- capture child_href_raw -%}
+                                    {%- render 'menu-collection-href', title: child_link.title, url: child_link.url -%}
+                                  {%- endcapture -%}
+                                  {%- assign child_href_parts = child_href_raw | strip | split: '|' -%}
+                                  {%- assign child_mapped = child_href_parts | first -%}
+                                  {%- assign child_href = child_href_parts | last -%}
+                                  {%- if child_mapped == '1' and child_href != blank and child_href != '#' -%}
+                                    <a
+                                      href="{{- child_href -}}"
+                                      class="drawer__submenu-link color-body-text"
+                                      {% if child_link.current %}aria-current="page"{% endif %}
+                                    >
+                                      {{- child_link.title | escape -}}
+                                    </a>
+                                  {%- elsif child_link.links.size > 0 and section.settings.drawer_layer -%}
                                     <button class="drawer__submenu-btn {% if child_link.links.current %} is-current{% endif %}">
                                       {{- child_link.title | escape -}}
                                       {% render 'icon', icon_name: 'theme-chevron' %}
                                     </button>
                                   {%- else -%}
                                     <a
-                                      href="{{- child_link.url -}}"
+                                      href="{{- child_href | default: child_link.url -}}"
                                       class="drawer__submenu-link color-body-text"
                                       {% if child_link.current %}aria-current="page"{% endif %}
-                                      role="button"
                                     >
                                       {{- child_link.title | escape -}}
                                     </a>
@@ -255,7 +315,7 @@
                       </div>
                     </details>
                   {%- else -%}
-                    <a href="{{- link.url -}}" class="drawer__nav-link h4{% if link.current %} is-current{% endif %}" {% if link.current %}aria-current="page"{% endif %} role="button">
+                    <a href="{{- menu_href | default: link.url -}}" class="drawer__nav-link h4{% if link.current %} is-current{% endif %}" {% if link.current %}aria-current="page"{% endif %}>
                       {{- link.title | escape -}}
                       {%- assign badge_rendered = false -%}
                       {%- for block in section.blocks -%}
@@ -275,6 +335,7 @@
                   {%- endif -%}
                 </li>
               {%- endfor -%}
+              {%- endif -%}
             </ul>
           </nav>
         </accordion-default>

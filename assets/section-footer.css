@@ -57,7 +57,7 @@
 
 .footer input {
   color: #333232;
-  background-color: #FFFFFF;
+  background-color: transparent;
 }
 /* placeholder color */
 .footer input::placeholder {
@@ -194,22 +194,26 @@
 
 .footer__links-mobile-link-icon {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
   margin-inline-start: 2.4rem;
   pointer-events: none;
 }
 
 .footer__links-mobile-link-icon svg {
-  transition: transform var(--duration-default), opacity var(--duration-default);
+  display: block;
+  width: 13px;
+  height: 13px;
+  transition: transform 0.25s ease;
 }
 
-.footer__links-mobile-link-icon svg:last-child {
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline-start: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(90deg);
-  opacity: 0;
+html.no-js .footer__links-details[open] .footer__links-mobile-link-icon svg,
+html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg,
+.footer__links-details[open] .footer__links-mobile-link-icon svg {
+  transform: rotate(180deg);
 }
 
 .footer__links-mobile-item--cols:last-child {
@@ -235,16 +239,11 @@
 }
 /* Active states */
 
-html.no-js .footer__links-details[open] .footer__links-mobile-link-icon svg:first-child,
-html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg:first-child {
-  opacity: 0;
-  transform: rotate(-90deg);
-}
-
-html.no-js .footer__links-details[open] .footer__links-mobile-link-icon svg:last-child,
-html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg:last-child {
+html.no-js .footer__links-details[open] .footer__links-mobile-link-icon svg,
+html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg,
+.footer__links-details[open] .footer__links-mobile-link-icon svg {
   opacity: 1;
-  transform: none;
+  transform: rotate(180deg);
 }
 
 @media (hover: hover) {
@@ -379,4 +378,92 @@ html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg:las
 }
 follow-on-shop-button {
   --reserved-width: fit-content !important;
+}
+
+.footer,
+.shopify-section-group-footer-group,
+.shopify-section-group-footer-group .shopify-section {
+  background: #000000 !important;
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.footer a,
+.footer a:link,
+.footer a:visited,
+.footer a:hover,
+.footer a:focus,
+.footer a:active,
+.footer button,
+.footer h1,
+.footer h2,
+.footer h3,
+.footer h4,
+.footer h5,
+.footer h6,
+.footer p,
+.footer li,
+.footer span,
+.footer summary,
+.footer summary:hover,
+.footer summary:focus,
+.footer summary:active,
+.footer__menu-title,
+.footer__links-mobile-link,
+.footer__links-mobile-link:hover,
+.footer__links a,
+.footer__links a:link,
+.footer__links a:visited,
+.footer__links a:hover,
+.footer__links a:focus,
+.footer__links a:active,
+.footer .accordion__body,
+.footer .accordion__body a,
+.footer .accordion__body a:link,
+.footer .accordion__body a:visited,
+.footer .accordion__body a:hover,
+.footer .accordion__body a:focus,
+.footer .accordion__body a:active,
+.footer .accordion__body li,
+.footer .accordion__body span,
+.footer__bottom,
+.footer__bottom a,
+.footer__bottom a:hover,
+.footer__bottom a:visited {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.footer__social-icons svg,
+.footer__social-icons svg path,
+.footer__social-icons svg * {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+}
+
+.footer__links-mobile-link-icon,
+.footer__links-mobile-link-icon svg {
+  color: #ffffff !important;
+}
+
+.footer__accordion,
+.footer__links-mobile-item,
+.footer__content::after,
+.footer hr {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  background-color: transparent;
+}
+
+.footer__accordion {
+  border-block-end-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.footer__content::after {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.footer input,
+.footer textarea,
+.footer select {
+  color: #111111;
 }

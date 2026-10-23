@@ -458,3 +458,52 @@ input:disabled + .card-product__swatch {
   background: rgb(var(--color-white-rgb));
   width: 100%;
 }
+
+.card-product__sale-badge,
+.card-product .badge,
+.card-product .marquee-tags .badge {
+  padding: 3px 6px !important;
+  font-size: 9px !important;
+  line-height: 1 !important;
+  border-radius: 2px !important;
+  height: auto !important;
+}
+
+.card-product .wishlisthero-floating,
+.card-product .wishlist-hero-custom-button,
+.wishlisthero-floating,
+.card-product wishlist-button-collection,
+.card-product .wk-button {
+  top: 8px !important;
+  right: 8px !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+}
+
+.wishlisthero-floating button,
+.card-product .wishlist-hero-custom-button button,
+.wishlisthero-floating .wishlist-hero-custom-button,
+.card-product .wk-button,
+.card-product button.wk-button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+}
+
+.wishlisthero-floating svg,
+.wishlisthero-floating img,
+.card-product .wishlist-hero-custom-button svg,
+.card-product .wishlist-hero-custom-button img,
+.card-product .wk-button svg,
+.card-product button.wk-button svg {
+  width: 12px !important;
+  height: 12px !important;
+}

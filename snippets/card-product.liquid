@@ -575,6 +575,16 @@
     {%- if plp_card -%}
       {%- liquid
         assign rating_value = 0
+        assign rating_count = 0
+        if product_ref.metafields.reviews.rating_count.value != blank
+          assign rating_count = product_ref.metafields.reviews.rating_count.value | plus: 0
+        elsif product_ref.metafields.reviews.rating_count != blank
+          assign rating_count = product_ref.metafields.reviews.rating_count | plus: 0
+        elsif product_ref.metafields.loox.num_reviews.value != blank
+          assign rating_count = product_ref.metafields.loox.num_reviews.value | plus: 0
+        elsif product_ref.metafields.loox.num_reviews != blank
+          assign rating_count = product_ref.metafields.loox.num_reviews | plus: 0
+        endif
         if product_ref.metafields.reviews.rating.value.rating != blank
           assign rating_value = product_ref.metafields.reviews.rating.value.rating
         elsif product_ref.metafields.loox.avg_rating != blank
@@ -585,6 +595,7 @@
           assign rating_filled = 5
         endif
       -%}
+      {%- if rating_count > 0 -%}
       <div class="card-product__rating" aria-label="{{- rating_value -}} / 5">
         {%- for i in (1..5) -%}
           <span class="card-product__star{% if i <= rating_filled %} is-filled{% endif %}" aria-hidden="true">
@@ -594,6 +605,7 @@
           </span>
         {%- endfor -%}
       </div>
+      {%- endif -%}
     {%- endif -%}
     <h5 class="card-product__title{% if plp_card %} heading-static{% endif %}">
       {%- if product_ref and product_ref != empty -%}

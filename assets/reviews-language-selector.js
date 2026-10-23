@@ -333,7 +333,11 @@
         'svg.loox-icon.star,svg[data-lx-fill],.reviews-dist svg,[data-testid="rating-summary-score"] svg{display:inline-block;width:1em;height:1em;vertical-align:middle;}' +
         'svg[data-lx-fill="empty"]{fill:none!important;stroke:currentColor;stroke-width:1.4;}' +
         'svg[data-lx-fill="full"],svg[data-lx-fill="half"],[data-testid="rating-summary-score"] svg{fill:currentColor;stroke:none;}' +
-        '[data-testid="sorting-menu-dropdown-button"] svg,.menu-icon.header-btn svg{display:block;width:18px;height:18px;margin:auto;color:currentColor;}';
+        '[data-testid="sorting-menu-dropdown-button"] svg,.menu-icon.header-btn svg{display:block;width:18px;height:18px;margin:auto;color:currentColor;}' +
+        '[data-testid="rating-summary"],.rating-summary{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;text-align:center!important;}' +
+        '[data-testid="rating-summary-score"]{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;font-size:26px!important;font-weight:700!important;line-height:1!important;}' +
+        '[data-testid="rating-summary-score"] svg{width:24px!important;height:24px!important;}' +
+        '[data-testid="rating-summary-count"]{display:block!important;width:100%!important;margin-top:6px!important;font-size:14px!important;text-align:center!important;}';
       doc.head.appendChild(force);
   
       doc.querySelectorAll('[data-time]').forEach(function (el) {
@@ -465,10 +469,33 @@
       }
     }
   
+    function styleLooxFrame(iframe) {
+      if (!iframe) return;
+      const apply = function () {
+        try {
+          const doc = iframe.contentDocument;
+          if (!doc || !doc.head || doc.getElementById('emolos-loox-summary')) return;
+          const style = doc.createElement('style');
+          style.id = 'emolos-loox-summary';
+          style.textContent =
+            '[data-testid="rating-summary"],.rating-summary{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;text-align:center!important;}' +
+            '[data-testid="rating-summary-score"]{display:flex!important;align-items:center!important;justify-content:center!important;gap:6px!important;font-size:26px!important;font-weight:700!important;line-height:1!important;}' +
+            '[data-testid="rating-summary-score"] svg,[data-testid="rating-summary"] svg.loox-icon{width:24px!important;height:24px!important;}' +
+            '[data-testid="rating-summary-count"]{display:block!important;width:100%!important;margin-top:6px!important;font-size:14px!important;font-weight:400!important;text-align:center!important;}';
+          doc.head.appendChild(style);
+        } catch (e) {}
+      };
+      apply();
+      iframe.addEventListener('load', apply);
+    }
+
     function mountHost(host) {
       if (!host || host.querySelector(':scope > .reviews-lang-bar')) return;
       const iframe = looxIframe(host);
-      if (iframe) originalIframeSrc(iframe);
+      if (iframe) {
+        originalIframeSrc(iframe);
+        styleLooxFrame(iframe);
+      }
   
       const bar = document.createElement('div');
       bar.className = 'reviews-lang-bar';

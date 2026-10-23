@@ -3967,3 +3967,55 @@ body:has(#Search-drawer-header.menu-opening) .section--announcement-bar {
 .product-options__value-list[data-open="true"] li:not([data-cloned]) .product-options__item.is-active {
   background-color: rgba(var(--color-foreground), .1);
 }
+
+.card-product wishlist-button-collection,
+.card-product wk-wishlist-button,
+.card wishlist-button-collection,
+wishlist-button-collection,
+.wk-wishlist-button.wk-floating,
+.card-product .wk-button,
+.card-product button.wk-button {
+  top: 8px !important;
+  right: 8px !important;
+  left: auto !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+  --background-size: 24px !important;
+  --icon-size: 12px !important;
+  --button-background-size: 24px !important;
+  --button-size: 24px !important;
+  --wk-button-background-size: 24px !important;
+  --wk-icon-size: 12px !important;
+  --wk-button-size: 24px !important;
+}
+
+.card-product wishlist-button-collection button,
+.card-product .wk-button,
+.card-product button.wk-button,
+wishlist-button-collection button,
+wishlist-button-collection .wk-button,
+.wk-wishlist-button button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  padding: 0 !important;
+}
+
+.card-product wishlist-button-collection svg,
+.card-product .wk-button svg,
+.card-product button.wk-button svg,
+wishlist-button-collection svg,
+wishlist-button-collection img,
+.wk-wishlist-button svg {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+}

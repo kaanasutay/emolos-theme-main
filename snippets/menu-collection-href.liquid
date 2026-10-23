@@ -1,0 +1,57 @@
+{%- liquid
+  assign menu_href = url
+  assign menu_title_key = title | downcase | strip | replace: '’', "'" | replace: '´', "'" | replace: '‘', "'"
+  assign mapped_handles = ''
+
+  case menu_title_key
+    when 'new arrivals'
+      assign mapped_handles = 'new-arrivals'
+    when 'spring/summer 26', 'spring/summer 2026', 'spring summer 26', 'ss26'
+      assign mapped_handles = 'spring-summer-26|spring-summer-2026|ss26'
+    when 'bestsellers', 'best sellers', 'best seller'
+      assign mapped_handles = 'best-sellers'
+    when 'tracksuits', 'tracksuit'
+      assign mapped_handles = 'tracksuits|tracksuit'
+    when 'two-piece sets', 'two piece sets', 'two-piece-sets'
+      assign mapped_handles = 'two-piece-sets|two-piece-set'
+    when 't-shirts', 't shirts', 'tshirts', 't-shirt'
+      assign mapped_handles = 't-shirts|tshirts|essential-t-shirt-men'
+    when 'knitwear'
+      assign mapped_handles = 'knitwear'
+    when "polo's & shirts", 'polos & shirts', "polo's and shirts", 'polos and shirts'
+      assign mapped_handles = 'polo-shirt|polos-shirts|polos'
+    when 'trousers & cargos', 'trousers and cargos'
+      assign mapped_handles = 'trousers-cargos|trousers-and-cargos|cargo-pants-for-men'
+    when 'hoodies & sweatshirts', 'hoodies and sweatshirts'
+      assign mapped_handles = 'hoodies-sweatshirts|hoodies'
+    when 'jackets', 'jacket'
+      assign mapped_handles = 'jackets|denim-jacket'
+    when 'shorts'
+      assign mapped_handles = 'shorts|mens-denim-shorts'
+  endcase
+
+  assign resolved = ''
+  assign is_mapped = '0'
+  if mapped_handles != blank
+    assign handle_list = mapped_handles | split: '|'
+    for candidate in handle_list
+      if collections[candidate] != empty
+        assign resolved = collections[candidate].url
+        assign is_mapped = '1'
+        break
+      endif
+    endfor
+  endif
+
+  if resolved != blank
+    assign menu_href = resolved
+  elsif menu_href == blank or menu_href == '#' or menu_href == '/'
+    assign guessed = title | handle
+    if collections[guessed] != empty
+      assign menu_href = collections[guessed].url
+      assign is_mapped = '1'
+    endif
+  endif
+
+  echo is_mapped | append: '|' | append: menu_href
+-%}

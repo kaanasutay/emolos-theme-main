@@ -528,6 +528,7 @@
         "returns": "RETURNS"
       },
       "unlock_offer": "UNLOCK 30% OFF",
+      "klarna_pay_later": "Buy now, pay later",
       "bundle": {
         "kicker": "3 item pack",
         "subheading": "Add {{ count }} items and unlock {{ percent }}% off.",

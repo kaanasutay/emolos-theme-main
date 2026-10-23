@@ -104,14 +104,21 @@ html.no-js .accordion__section[open] .accordion__icon svg {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-inline-end: 1.2rem;
+  width: 13px;
+  height: 13px;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
 }
 
-.product__accordion .accordion__icon>svg {
-  position: absolute;
+.product__accordion .accordion__icon > svg {
+  position: static;
+  width: 13px;
+  height: 13px;
+  transition: transform 0.25s ease;
 }
 
-.product__accordion .accordion__section.is-active .accordion__icon>svg:last-child {
+.product__accordion .accordion__section.is-active .accordion__icon > svg,
+.product__accordion .accordion__section[open] .accordion__icon > svg {
   transform: rotate(180deg);
 }
 
