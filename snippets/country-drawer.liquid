@@ -14,6 +14,15 @@
     align-items: start;
     column-gap: 4px;
   }
+
+  .localization-label {
+    margin: 0 0 0.6rem;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
 {% endstyle %}
 
 {% liquid
@@ -84,6 +93,7 @@
           {% form 'localization' %}
             {% if localization.available_countries.size > 1 %}
               <div class="form-row">
+                <p class="localization-label">Currency</p>
                 <theme-dropdown class="theme-dropdown w-full" data-direction="down">
                   <button
                     type="button"
@@ -91,20 +101,36 @@
                     id="country-drawer-selector-{{ append_id }}"
                   >
                     <span class="dropdown-button__text-content">
-                      {{ localization.country.name }} ({{ localization.country.currency.iso_code }}|{{ localization.country.currency.symbol }})
+                      {{ localization.country.currency.iso_code }} - {{ localization.country.currency.symbol }}
                     </span>
                     {% render 'icon', icon_name: 'theme-chevron-down' %}
                   </button>
 
                   <div class="dropdown-content">
                     <ul class="slim-scrollbar">
-                      {% for country in localization.available_countries %}
-                        <li class="{% if localization.country.iso_code == country.iso_code %}is-active{% endif %}">
-                          <a href="#" data-value="{{ country.iso_code }}">
-                            {{ country.name }} ({{ country.currency.iso_code }}|{{ country.currency.symbol }})
-                          </a>
-                        </li>
-                      {% endfor %}
+                      {%- assign allowed_currencies = 'EUR,USD,CAD,GBP' | split: ',' -%}
+                      {%- for currency_code in allowed_currencies -%}
+                        {%- assign matched_country = blank -%}
+                        {%- for country in localization.available_countries -%}
+                          {%- if country.currency.iso_code == currency_code -%}
+                            {%- assign matched_country = country -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                        {%- if matched_country != blank -%}
+                          {%- case currency_code -%}
+                            {%- when 'EUR' -%}{%- assign currency_label = 'Euro (EUR - €)' -%}
+                            {%- when 'USD' -%}{%- assign currency_label = 'US Dollar (USD - $)' -%}
+                            {%- when 'CAD' -%}{%- assign currency_label = 'Canadian Dollar (CAD - CA$)' -%}
+                            {%- when 'GBP' -%}{%- assign currency_label = 'British Pound (GBP - £)' -%}
+                          {%- endcase -%}
+                          <li class="{% if localization.country.iso_code == matched_country.iso_code %}is-active{% endif %}">
+                            <a href="#" data-value="{{ matched_country.iso_code }}">
+                              {{ currency_label }}
+                            </a>
+                          </li>
+                        {%- endif -%}
+                      {%- endfor -%}
                     </ul>
                   </div>
 
@@ -119,6 +145,7 @@
 
             {% if localization.available_languages.size > 1 %}
               <div class="form-row">
+                <p class="localization-label">Language</p>
                 <theme-dropdown class="theme-dropdown w-full" data-direction="down">
                   <button
                     type="button"
@@ -126,20 +153,43 @@
                     id="country-drawer-language-{{ append_id }}"
                   >
                     <span class="dropdown-button__text-content">
-                      {{ localization.language.endonym_name | capitalize }}
+                      {%- assign current_lang = localization.language.iso_code | slice: 0, 2 -%}
+                      {%- case current_lang -%}
+                        {%- when 'de' -%}German
+                        {%- when 'fr' -%}French
+                        {%- when 'es' -%}Spanish
+                        {%- else -%}English
+                      {%- endcase -%}
                     </span>
                     {% render 'icon', icon_name: 'theme-chevron-down' %}
                   </button>
 
                   <div class="dropdown-content">
                     <ul class="slim-scrollbar">
-                      {% for language in localization.available_languages %}
-                        <li class="{% if language.iso_code == localization.language.iso_code %}is-active{% endif %}">
-                          <a href="#" data-value="{{ language.iso_code }}">
-                            {{ language.endonym_name | capitalize }}
-                          </a>
-                        </li>
-                      {% endfor %}
+                      {%- assign allowed_languages = 'en,de,fr,es' | split: ',' -%}
+                      {%- for lang_code in allowed_languages -%}
+                        {%- assign matched_language = blank -%}
+                        {%- for language in localization.available_languages -%}
+                          {%- assign language_root = language.iso_code | slice: 0, 2 -%}
+                          {%- if language_root == lang_code -%}
+                            {%- assign matched_language = language -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                        {%- if matched_language != blank -%}
+                          {%- case lang_code -%}
+                            {%- when 'en' -%}{%- assign language_label = 'English' -%}{%- assign language_flag = '🇺🇸' -%}
+                            {%- when 'de' -%}{%- assign language_label = 'German' -%}{%- assign language_flag = '🇩🇪' -%}
+                            {%- when 'fr' -%}{%- assign language_label = 'French' -%}{%- assign language_flag = '🇫🇷' -%}
+                            {%- when 'es' -%}{%- assign language_label = 'Spanish' -%}{%- assign language_flag = '🇪🇸' -%}
+                          {%- endcase -%}
+                          <li class="{% if matched_language.iso_code == localization.language.iso_code %}is-active{% endif %}">
+                            <a href="#" data-value="{{ matched_language.iso_code }}">
+                              <span aria-hidden="true">{{ language_flag }}</span> {{ language_label }}
+                            </a>
+                          </li>
+                        {%- endif -%}
+                      {%- endfor -%}
                     </ul>
                   </div>
 

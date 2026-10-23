@@ -2,6 +2,9 @@
 
 {%- liquid
   assign new_in_image = section.settings.image
+  if new_in_image == blank and section.settings.collection != blank
+    assign new_in_image = section.settings.collection.image | default: section.settings.collection.products.first.featured_image
+  endif
   if section.settings.image_mobile != blank
     assign new_in_image_mobile = section.settings.image_mobile
   else
@@ -41,7 +44,7 @@
         {%- endif -%}
 
         {%- if section.settings.heading != blank -%}
-          <h2 class="new-in__heading">{{ section.settings.heading }}</h2>
+          <h2 class="new-in__heading">{{ section.settings.heading | strip | remove_first: '#' | strip }}</h2>
         {%- endif -%}
 
         {%- if section.settings.content != blank -%}
@@ -189,6 +192,12 @@
     {
       "type": "header",
       "content": "Image"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection image",
+      "info": "Used when no image is selected. Change the photo anytime from the image picker below."
     },
     {
       "type": "image_picker",

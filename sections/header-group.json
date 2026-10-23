@@ -14,6 +14,14 @@
       "announcement-bar": {
         "type": "announcement-bar",
         "blocks": {
+          "welcome-slide": {
+            "type": "text-slide",
+            "settings": {
+              "content": "<p><strong>WELCOME TO OUR STORE</strong></p>",
+              "dropdown_cards": false,
+              "countdown": false
+            }
+          },
           "cee0c4f6-5546-43a3-bfc3-2f3afa36d9d5": {
             "type": "text-slide",
             "settings": {
@@ -47,6 +55,7 @@
           }
         },
         "block_order": [
+          "welcome-slide",
           "cee0c4f6-5546-43a3-bfc3-2f3afa36d9d5"
         ],
         "settings": {

@@ -533,3 +533,27 @@ html.no-js .hero__swiper-slide {
     padding: 70px;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .section-hero-banner .hero-banner,
+  .section-hero-banner .hero__swiper,
+  .section-hero-banner .hero__swiper-slide,
+  .section-hero-banner .hero__inner,
+  .section-hero-banner .hero__media,
+  .section-hero-banner .hero__media.small-up-hide {
+    height: calc(80svh - var(--header-height, 59px) - 14px) !important;
+    min-height: calc(80svh - var(--header-height, 59px) - 14px) !important;
+    max-height: calc(80svh - var(--header-height, 59px) - 14px) !important;
+    aspect-ratio: 360 / 638.59;
+  }
+
+  .section-hero-banner .hero-banner--full .hero__media,
+  .section-hero-banner .hero-banner--full .hero__media img,
+  .section-hero-banner .hero-banner--full .hero__media video {
+    width: 100%;
+    height: 100% !important;
+    max-height: 100%;
+    object-fit: cover;
+    object-position: center center;
+  }
+}

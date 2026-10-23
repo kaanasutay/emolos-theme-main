@@ -151,14 +151,13 @@
       "type": "new-in",
       "name": "New In",
       "settings": {
-        "layout": "left",
-        "eyebrow": "TRENDING",
-        "heading": "NEW ARRIVALS",
-        "content": "<p>Discover Our New Arrivals</p>",
-        "link_label": "SHOP NEW IN",
-        "link": "",
-        "image": "shopify://shop_images/DSC0968_resized_0cf4a2c9-0872-4594-95cd-f721ecb985b7.jpg",
-        "image_mobile": "shopify://shop_images/DSC0968_resized_0cf4a2c9-0872-4594-95cd-f721ecb985b7.jpg"
+          "layout": "left",
+          "eyebrow": "",
+          "heading": "JEANS COLLECTIONS",
+          "content": "<p>Discover Our New Arrivals</p>",
+          "link_label": "SHOP NEW IN",
+          "link": "shopify://collections/slim-fit-jeans",
+          "collection": "slim-fit-jeans"
       }
     },
     "best_seller_main": {

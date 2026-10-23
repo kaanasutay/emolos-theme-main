@@ -1,8 +1,8 @@
 .best-seller {
     background-color: #ffffff;
     color: #000000;
-    margin-block-start: 8rem;
-    padding-block: 5rem 0;
+    margin-block-start: 1.6rem;
+    padding-block: 1.2rem 28px;
   }
   
   .best-seller__header {
@@ -161,9 +161,10 @@
   }
   
   .best-seller__footer {
-    margin-top: 5rem;
+    margin-top: 2rem;
+    margin-bottom: 0;
     padding-inline: 2.4rem;
-    padding-block-end: 2rem;
+    padding-block-end: 0;
     text-align: center;
   }
   
@@ -200,6 +201,7 @@
     .best-seller {
       margin-block-start: 8rem;
       padding-block-start: 8rem;
+      padding-bottom: 40px;
     }
   
     .best-seller__header {

@@ -3,7 +3,7 @@ if (!customElements.get('shop-by-category-slider')) {
       connectedCallback() {
         this.track = this.querySelector('.shop-by-category__track');
         if (!this.track) return;
-  
+
         this.offset = 0;
         this.direction = 1;
         this.speed = 32;
@@ -13,20 +13,47 @@ if (!customElements.get('shop-by-category-slider')) {
         this.setWidth = 0;
         this.raf = null;
         this.lastTime = 0;
-        this.originalCount = this.track.querySelectorAll('.shop-by-category__slide:not([data-clone])').length;
-  
-        this.prepareLoop();
+        this.bound = false;
+        this.mobileQuery = window.matchMedia('(max-width: 767px)');
+        this.onMode = () => this.setup();
+        this.mobileQuery.addEventListener('change', this.onMode);
+        this.setup();
+      }
+
+      disconnectedCallback() {
+        this.stop();
+        window.removeEventListener('resize', this.onResize);
+        if (this.mobileQuery) this.mobileQuery.removeEventListener('change', this.onMode);
+      }
+
+      isMobile() {
+        return this.mobileQuery ? this.mobileQuery.matches : window.innerWidth <= 767;
+      }
+
+      setup() {
+        this.stop();
+        this.offset = 0;
+        this.track.style.transform = 'none';
+        this.track.querySelectorAll('[data-clone]').forEach((node) => node.remove());
+
+        if (!this.isMobile()) {
+          this.prepareLoop();
+        }
+
         this.sizeSlides();
+        this.originalCount = this.track.querySelectorAll('.shop-by-category__slide:not([data-clone])').length;
+
+        if (!this.bound) {
+          this.bind();
+          this.bound = true;
+        }
+
+        if (this.isMobile()) return;
+
         requestAnimationFrame(() => {
           this.measure();
           this.start();
         });
-        this.bind();
-      }
-  
-      disconnectedCallback() {
-        this.stop();
-        window.removeEventListener('resize', this.onResize);
       }
   
       prepareLoop() {
@@ -51,6 +78,14 @@ if (!customElements.get('shop-by-category-slider')) {
       }
   
       sizeSlides() {
+        if (this.isMobile()) {
+          this.track.querySelectorAll('.shop-by-category__slide').forEach((slide) => {
+            slide.style.flex = '0 0 calc(100vw - 48px)';
+            slide.style.width = 'calc(100vw - 48px)';
+          });
+          return;
+        }
+
         const slideWidth = Math.round(this.clientWidth * this.slideRatio());
         this.track.querySelectorAll('.shop-by-category__slide').forEach((slide) => {
           slide.style.flex = `0 0 ${slideWidth}px`;
@@ -103,6 +138,11 @@ if (!customElements.get('shop-by-category-slider')) {
         }
   
         this.onResize = () => {
+          if (this.isMobile()) {
+            this.track.style.transform = 'none';
+            this.sizeSlides();
+            return;
+          }
           this.sizeSlides();
           this.measure();
           this.offset = this.setWidth ? this.offset % this.setWidth : 0;

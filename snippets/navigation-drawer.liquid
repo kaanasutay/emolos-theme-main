@@ -47,18 +47,73 @@
                     </svg>
                   </summary>
                   <div class="mobile-menu__loc-list" role="list">
-                    {%- for country in localization.available_countries -%}
-                      <button
-                        type="submit"
-                        name="country_code"
-                        value="{{ country.iso_code }}"
-                        class="mobile-menu__loc-option{% if country.iso_code == localization.country.iso_code %} is-active{% endif %}"
-                      >
-                        {{- country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
-                      </button>
+                    {%- assign allowed_currencies = 'EUR,USD,CAD,GBP' | split: ',' -%}
+                    {%- for currency_code in allowed_currencies -%}
+                      {%- assign matched_country = blank -%}
+                      {%- for country in localization.available_countries -%}
+                        {%- if country.currency.iso_code == currency_code -%}
+                          {%- assign matched_country = country -%}
+                          {%- break -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                      {%- if matched_country != blank -%}
+                        {%- case currency_code -%}
+                          {%- when 'EUR' -%}{%- assign currency_label = 'Euro (EUR - €)' -%}
+                          {%- when 'USD' -%}{%- assign currency_label = 'US Dollar (USD - $)' -%}
+                          {%- when 'CAD' -%}{%- assign currency_label = 'Canadian Dollar (CAD - CA$)' -%}
+                          {%- when 'GBP' -%}{%- assign currency_label = 'British Pound (GBP - £)' -%}
+                        {%- endcase -%}
+                        <button
+                          type="submit"
+                          name="country_code"
+                          value="{{ matched_country.iso_code }}"
+                          class="mobile-menu__loc-option{% if matched_country.iso_code == localization.country.iso_code %} is-active{% endif %}"
+                        >
+                          {{ currency_label }}
+                        </button>
+                      {%- endif -%}
                     {%- endfor -%}
                   </div>
                 </details>
+                {%- if localization.available_languages.size > 1 -%}
+                  <details class="mobile-menu__loc">
+                    <summary class="mobile-menu__loc-button">
+                      <span class="mobile-menu__loc-text">Language</span>
+                      <svg class="mobile-menu__loc-caret" viewBox="0 0 19 12" width="10" height="6" aria-hidden="true">
+                        <polyline fill="none" stroke="currentColor" points="17 2 9.5 10 2 2" stroke-width="2" stroke-linecap="square"></polyline>
+                      </svg>
+                    </summary>
+                    <div class="mobile-menu__loc-list" role="list">
+                      {%- assign allowed_languages = 'en,de,fr,es' | split: ',' -%}
+                      {%- for lang_code in allowed_languages -%}
+                        {%- assign matched_language = blank -%}
+                        {%- for language in localization.available_languages -%}
+                          {%- assign language_root = language.iso_code | slice: 0, 2 -%}
+                          {%- if language_root == lang_code -%}
+                            {%- assign matched_language = language -%}
+                            {%- break -%}
+                          {%- endif -%}
+                        {%- endfor -%}
+                        {%- if matched_language != blank -%}
+                          {%- case lang_code -%}
+                            {%- when 'en' -%}{%- assign language_label = '🇺🇸 English' -%}
+                            {%- when 'de' -%}{%- assign language_label = '🇩🇪 German' -%}
+                            {%- when 'fr' -%}{%- assign language_label = '🇫🇷 French' -%}
+                            {%- when 'es' -%}{%- assign language_label = '🇪🇸 Spanish' -%}
+                          {%- endcase -%}
+                          <button
+                            type="submit"
+                            name="language_code"
+                            value="{{ matched_language.iso_code }}"
+                            class="mobile-menu__loc-option{% if matched_language.iso_code == localization.language.iso_code %} is-active{% endif %}"
+                          >
+                            {{ language_label }}
+                          </button>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                  </details>
+                {%- endif -%}
               {%- else -%}
                 <span class="mobile-menu__loc-button">
                   <span class="mobile-menu__loc-text">
