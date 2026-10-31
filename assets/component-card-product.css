@@ -462,9 +462,14 @@ input:disabled + .card-product__swatch {
 .card-product__sale-badge,
 .card-product .badge,
 .card-product .marquee-tags .badge {
-  padding: 3px 6px !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 22px;
+  padding: 6px 8px !important;
   font-size: 9px !important;
-  line-height: 1 !important;
+  line-height: 1.2 !important;
   border-radius: 2px !important;
   height: auto !important;
 }

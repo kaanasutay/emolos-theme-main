@@ -2,15 +2,23 @@
     if (customElements.get('bundle-pack')) return;
   
     const formatMoney = (cents, format) => {
+      const numeric = Number(cents) / 100;
+      let formatted;
       if (window.Shopify && typeof window.Shopify.formatMoney === 'function') {
-        return window.Shopify.formatMoney(cents, format);
+        formatted = window.Shopify.formatMoney(cents, format);
+      } else {
+        const value = numeric.toFixed(2);
+        formatted = format
+          ? format
+            .replace(/\{\{\s*amount\s*\}\}/, value)
+            .replace(/\{\{\s*amount_no_decimals\s*\}\}/, String(Math.round(numeric)))
+            .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, value.replace('.', ','))
+          : value;
       }
-      const value = (Number(cents) / 100).toFixed(2);
-      if (!format) return value;
-      return format
-        .replace(/\{\{\s*amount\s*\}\}/, value)
-        .replace(/\{\{\s*amount_no_decimals\s*\}\}/, String(Math.round(Number(cents) / 100)))
-        .replace(/\{\{\s*amount_with_comma_separator\s*\}\}/, value.replace('.', ','));
+      if (typeof stripWholeNumberPrice === 'function') {
+        return stripWholeNumberPrice(formatted, numeric);
+      }
+      return formatted;
     };
   
     class BundlePack extends HTMLElement {

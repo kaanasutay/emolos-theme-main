@@ -87,13 +87,13 @@
                 {% endif %}
               </td>
               <td class="quick-order-list__price"
-                  data-base-price="{{ variant.price | money | escape }}"
+                  data-base-price="{{ variant.price | money_without_trailing_zeros | escape }}"
                   data-base-price-amount="{{ variant.price }}">
                 {%- if variant.quantity_price_breaks.size > 0 -%}
                   <script type="application/json" data-tier-breaks>
                     [
                       {%- for tier in variant.quantity_price_breaks -%}
-                        { "min": {{ tier.minimum_quantity }}, "price": {{ tier.price | money | json }} }{%- unless forloop.last -%},{%- endunless -%}
+                        { "min": {{ tier.minimum_quantity }}, "price": {{ tier.price | money_without_trailing_zeros | json }} }{%- unless forloop.last -%},{%- endunless -%}
                       {%- endfor -%}
                     ]
                   </script>
@@ -108,21 +108,21 @@
                         <div class="price__sale">
                           <div class="price__sale-inner">
                             <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-                            <del>{{ variant.compare_at_price | money }}</del>
+                            <del>{{ variant.compare_at_price | money_without_trailing_zeros }}</del>
                             <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
-                            <ins data-current-price>{{ variant.price | money }}</ins>
+                            <ins data-current-price>{{ variant.price | money_without_trailing_zeros }}</ins>
                           </div>
                         </div>
                       {%- else -%}
                         <div class="price__regular">
                           <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
-                          <span data-current-price>{{ variant.price | money }}</span>
+                          <span data-current-price>{{ variant.price | money_without_trailing_zeros }}</span>
                         </div>
                       {%- endif -%}
                       {%- if variant.unit_price_measurement -%}
                         <div class="product__notice caption caption--small">
                           <span class="visually-hidden">{{ 'products.product.quick_order_list.unit_price' | t }}</span>
-                          {{ variant.unit_price | money }}
+                          {{ variant.unit_price | money_without_trailing_zeros }}
                           <span aria-hidden="true">/</span>
                           {%- if variant.unit_price_measurement.reference_value != 1 -%}
                             {{ variant.unit_price_measurement.reference_value }}

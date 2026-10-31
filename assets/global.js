@@ -2150,9 +2150,18 @@ async function updateFreeShipping() {
   }
 }
 
+function stripWholeNumberPrice(value, numeric) {
+  let formatted = String(value).replace(/\s*(GBP|USD|EUR|TRY|AUD|CAD)\s*$/i, '').trim();
+  if (Number.isFinite(numeric) && Math.abs(numeric - Math.round(numeric)) < 0.001) {
+    formatted = formatted.replace(/([.,]00)(?!\d)/, '');
+  }
+  return formatted;
+}
+
 function formatPrice(moneyString, amount) {
+  const numericAmount = Number(amount);
   // convert amount to 00.00 format
-  amount = amount.toFixed(2);
+  amount = numericAmount.toFixed(2);
 
   const money_format = /{{(.*?)}}/;
 
@@ -2194,7 +2203,7 @@ function formatPrice(moneyString, amount) {
       break;
   }
 
-  return newValue;
+  return stripWholeNumberPrice(newValue, numericAmount);
 }
 
 class SwiperComponent extends HTMLElement {

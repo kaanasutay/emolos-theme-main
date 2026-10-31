@@ -415,7 +415,7 @@
                       {% if current_selling_plan_allocation.per_delivery_price != blank %}
                         <p class="product__subscription-price caption caption--small">
                           {%- liquid
-                            assign selling_plan_price = current_selling_plan_allocation.per_delivery_price | money
+                            assign selling_plan_price = current_selling_plan_allocation.per_delivery_price | money_without_trailing_zeros
                             echo 'products.product.from_price_per' | t: price: selling_plan_price
                           -%}
                           </p>

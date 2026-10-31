@@ -51,7 +51,7 @@
           {%- endif -%}
         </a>
         <h2 class="bundle-pack__name">{{- product.title -}}</h2>
-        <p class="bundle-pack__price">{{- first_available.price | money -}}</p>
+        <p class="bundle-pack__price">{{- first_available.price | money_without_trailing_zeros -}}</p>
         {%- if product.has_only_default_variant -%}
           <input type="hidden" data-bundle-variant value="{{- first_available.id -}}" data-price="{{- first_available.price -}}" data-title="{{- product.title | escape -}}" data-image="{{- product.featured_image | image_url: width: 160 -}}">
         {%- else -%}

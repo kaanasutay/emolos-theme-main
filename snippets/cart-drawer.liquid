@@ -113,7 +113,7 @@
                   </span>
 
                   <span>
-                    {{- cart.total_price | money -}}
+                    {{- cart.total_price | money_without_trailing_zeros -}}
                   </span>
                 </div>
 
@@ -124,7 +124,7 @@
                         {% render 'icon', icon_name: 'option-price_tag' %}
                         <span>
                           {{ discount.title }}
-                          (-{{ discount.total_allocated_amount | money }})
+                          (-{{ discount.total_allocated_amount | money_without_trailing_zeros }})
                         </span>
                       </li>
                     {%- endfor -%}

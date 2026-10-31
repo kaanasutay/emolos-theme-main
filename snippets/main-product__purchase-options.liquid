@@ -137,30 +137,30 @@
               First payment
 
               {% if settings.show_currency_codes %}
-                {{ current_selling_plan_allocation.price_adjustments[0].price | money_with_currency }}
+                {{ current_selling_plan_allocation.price_adjustments[0].price | money_without_trailing_zeros }}
               {% else %}
-                {{ current_selling_plan_allocation.price_adjustments[0].price | money }}
+                {{ current_selling_plan_allocation.price_adjustments[0].price | money_without_trailing_zeros }}
               {% endif %}
               then
 
               {% if settings.show_currency_codes %}
-                {{ current_selling_plan_allocation.price_adjustments[1].price | money_with_currency }}
+                {{ current_selling_plan_allocation.price_adjustments[1].price | money_without_trailing_zeros }}
               {% else %}
-                {{ current_selling_plan_allocation.price_adjustments[1].price | money }}
+                {{ current_selling_plan_allocation.price_adjustments[1].price | money_without_trailing_zeros }}
               {% endif %}
             {%- else -%}
               First {{ current_selling_plan_allocation.selling_plan.price_adjustments[0].order_count }} payments
 
               {% if settings.show_currency_codes %}
-                {{ current_selling_plan_allocation.price_adjustments[0].price | money_with_currency }} then
+                {{ current_selling_plan_allocation.price_adjustments[0].price | money_without_trailing_zeros }} then
               {% else %}
-                {{ current_selling_plan_allocation.price_adjustments[0].price | money }} then
+                {{ current_selling_plan_allocation.price_adjustments[0].price | money_without_trailing_zeros }} then
               {% endif %}
 
               {% if settings.show_currency_codes %}
-                {{ current_selling_plan_allocation.price_adjustments[1].price | money_with_currency }}
+                {{ current_selling_plan_allocation.price_adjustments[1].price | money_without_trailing_zeros }}
               {% else %}
-                {{ current_selling_plan_allocation.price_adjustments[1].price | money }}
+                {{ current_selling_plan_allocation.price_adjustments[1].price | money_without_trailing_zeros }}
               {% endif %}
             {%- endif -%}
           </p>

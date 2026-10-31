@@ -90,18 +90,18 @@
               {{- 'products.product.price.sale_price' | t -}}
             </span>
             <ins>
-              {{- display_price | money -}}
+              {{- display_price | money_without_trailing_zeros -}}
             </ins>
 
             <span class="visually-hidden">
               {{- 'products.product.price.regular_price' | t -}}
             </span>
             <del>
-              {{- display_compare | money -}}
+              {{- display_compare | money_without_trailing_zeros -}}
             </del>
           </div>
         {%- else -%}
-          {{- display_price | money -}}
+          {{- display_price | money_without_trailing_zeros -}}
         {%- endif -%}
 
         {%- if line_item.variant.available and line_item.unit_price_measurement -%}
@@ -109,7 +109,7 @@
             <span class="visually-hidden">
               {{- 'products.product.price.unit_price' | t -}}
             </span>
-            {{- line_item.variant.unit_price | money -}}
+            {{- line_item.variant.unit_price | money_without_trailing_zeros -}}
 
             <span aria-hidden="true">/</span>
 

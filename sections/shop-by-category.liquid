@@ -56,7 +56,7 @@
                 class="shop-by-category__card"
                 {% if card_link != blank %}href="{{ card_link }}"{% else %}role="link" aria-disabled="true"{% endif %}
               >
-                <div class="shop-by-category__media">
+                <div class="shop-by-category__media"{% if card_image != blank and card_image.aspect_ratio > 0 %} style="aspect-ratio: {{ card_image.aspect_ratio }};"{% endif %}>
                   {%- if card_image != blank -%}
                     {{
                       card_image

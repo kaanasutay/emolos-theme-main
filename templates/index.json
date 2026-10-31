@@ -58,8 +58,8 @@
       "settings": {
         "enable_transparent_header": false,
         "enable_overlay_for_transparent_header": true,
-        "slider_height": "100svh",
-        "slider_height_mobile": "100svh",
+        "slider_height": "auto",
+        "slider_height_mobile": "auto",
         "slider_autoplay_interval": 5,
         "slider_arrows": true,
         "slider_arrows_position": "hero__swiper-buttons--right",

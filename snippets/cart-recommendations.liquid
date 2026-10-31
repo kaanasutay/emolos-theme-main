@@ -86,12 +86,12 @@
                 <p class="cart-recommendations__item-price">
                   {%- if rec_compare > rec_price -%}
                     <span class="visually-hidden">{{- 'products.product.price.sale_price' | t -}}</span>
-                    <ins>{{- rec_price | money -}}</ins>
+                    <ins>{{- rec_price | money_without_trailing_zeros -}}</ins>
                     <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
-                    <del>{{- rec_compare | money -}}</del>
+                    <del>{{- rec_compare | money_without_trailing_zeros -}}</del>
                     <span class="cart-recommendations__sale-label">{{- 'products.product.price.sale_badge' | t -}}</span>
                   {%- else -%}
-                    {{- rec_price | money -}}
+                    {{- rec_price | money_without_trailing_zeros -}}
                   {%- endif -%}
                 </p>
 

@@ -21,12 +21,8 @@
   assign compare_at_price = target.compare_at_price
   assign price = target.price | default: 1999
   assign available = target.available | default: false
-  assign money_price = price | money
+  assign money_price = price | money_without_trailing_zeros
   assign price_extra_info = price_extra_info | default: false
-
-  if settings.show_currency_codes and skip_currency_code != true
-    assign money_price = price | money_with_currency
-  endif
 
   if target == product_ref and product_ref.price_varies == false
     assign compare_at_price = target.compare_at_price_max
@@ -72,17 +68,17 @@
           <div class="{{ sale_container_class }}">
             <div class="price__sale-inner">
               <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
-              <del>{{- compare_at_price_max | money -}}</del>
+              <del>{{- compare_at_price_max | money_without_trailing_zeros -}}</del>
 
               <ins>
                 {{- 'products.product.price.from_price' | t -}}
                 <span class="visually-hidden">{{- 'products.product.price.min_price' | t -}}</span>
-                <span {{ min_price_class }}>{{- money_price_min | money -}}</span>
+                <span {{ min_price_class }}>{{- money_price_min | money_without_trailing_zeros -}}</span>
 
                 <span aria-hidden="true">-</span>
 
                 <span class="visually-hidden">{{- 'products.product.price.max_price' | t -}}</span>
-                <span>{{- money_price_max | money -}}</span>
+                <span>{{- money_price_max | money_without_trailing_zeros -}}</span>
               </ins>
             </div>
 
@@ -92,12 +88,12 @@
         {% else %}
           <div class="price__regular">
             <span class="visually-hidden">{{- 'products.product.price.min_price' | t -}}</span>
-            <span>{{- product_ref.price_min | money -}}</span>
+            <span>{{- product_ref.price_min | money_without_trailing_zeros -}}</span>
 
             <span aria-hidden="true">-</span>
 
             <span class="visually-hidden">{{- 'products.product.price.max_price' | t -}}</span>
-            <span>{{- product_ref.price_max | money -}}</span>
+            <span>{{- product_ref.price_max | money_without_trailing_zeros -}}</span>
           </div>
         {%- endif -%}
 
@@ -119,7 +115,7 @@
         <div class="{{ sale_container_class }}">
           <div class="price__sale-inner">
             <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
-            <del>{{- compare_at_price | money -}}</del>
+            <del>{{- compare_at_price | money_without_trailing_zeros -}}</del>
             <span class="visually-hidden">{{- 'products.product.price.sale_price' | t -}}</span>
             <ins>{{- money_price -}}</ins>
           </div>
@@ -141,9 +137,9 @@
           </span>
 
           {%- if settings.show_currency_codes -%}
-            {{- variant.unit_price | money_with_currency -}}
+            {{- variant.unit_price | money_without_trailing_zeros -}}
           {%- else -%}
-            {{- variant.unit_price | money -}}
+            {{- variant.unit_price | money_without_trailing_zeros -}}
           {%- endif -%}
 
           <span aria-hidden="true">/</span>
@@ -174,7 +170,7 @@
         </div>
       {%- endif -%}
     {%- else -%}
-      <span>{{- 9999 | money -}}</span>
+      <span>{{- 9999 | money_without_trailing_zeros -}}</span>
     {%- endif -%}
   </div>
 </div>

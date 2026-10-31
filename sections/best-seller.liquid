@@ -126,10 +126,10 @@
                       endif
                     -%}
                     {%- if card_compare != blank and card_compare > card_price -%}
-                      <span class="best-seller__price-sale">{{ card_price | money }}</span>
-                      <span class="best-seller__price-compare">{{ card_compare | money }}</span>
+                      <span class="best-seller__price-sale">{{ card_price | money_without_trailing_zeros }}</span>
+                      <span class="best-seller__price-compare">{{ card_compare | money_without_trailing_zeros }}</span>
                     {%- else -%}
-                      <span class="best-seller__price-regular">{{ card_price | money }}</span>
+                      <span class="best-seller__price-regular">{{ card_price | money_without_trailing_zeros }}</span>
                     {%- endif -%}
                   </div>
                 </div>
