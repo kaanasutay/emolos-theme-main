@@ -898,31 +898,37 @@ quick-cart-modal .product-options__item.is-active label {
 
 quick-cart-modal .product-options--size .product-options__item:has(.size-num) {
   width: auto !important;
-  min-width: 54px !important;
-  height: 50px !important;
-  min-height: 50px !important;
+  min-width: 64px !important;
+  height: 48px !important;
+  min-height: 48px !important;
   overflow: visible !important;
 }
 
 quick-cart-modal .product-options--size .product-options__label:has(.size-num),
 quick-cart-modal .product-options--size .product-options__item:has(.size-num) label {
   display: inline-flex !important;
-  flex-direction: column !important;
+  flex-direction: row !important;
   align-items: center !important;
   justify-content: center !important;
+  gap: 0 !important;
   width: auto !important;
-  min-width: 54px !important;
-  height: 50px !important;
-  min-height: 50px !important;
-  padding: 4px 6px !important;
-  line-height: 1.15 !important;
+  min-width: 64px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  padding: 0 8px !important;
+  line-height: 1 !important;
   text-align: center !important;
-  white-space: normal !important;
+  white-space: nowrap !important;
 }
 
+quick-cart-modal .product-options--size .size-num,
+quick-cart-modal .product-options--size .size-slash,
 quick-cart-modal .product-options--size .size-len {
-  font-size: 10px !important;
-  font-weight: 400 !important;
+  display: inline !important;
+  width: auto !important;
+  font-size: 12px !important;
+  font-weight: inherit !important;
+  line-height: 1 !important;
 }
 
 quick-cart-modal .product-selector__quantity,

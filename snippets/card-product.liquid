@@ -153,7 +153,7 @@
                   render 'image', image: variant.featured_image, class: class, image_per_view: image_per_view
                 endif
 
-                if settings.card_product_image_hover and forloop_index == 1 and product_ref.media.size > 1
+                if forloop_index == 1 and product_ref.media.size > 1
 
                   assign variant_cover_media = product_ref.media[0]
                   assign variant_cover_media_type = variant_cover_media.media_type
@@ -512,7 +512,7 @@
       endif
     %}
 
-    <a href="{{- product_ref.url -}}" class="media card-product__media {{ media_classes }}{% if settings.card_product_image_hover and product_ref.media.size > 1 and hover_media != nil %} has-hover{% endif %}" aria-label="{{- product_ref.title -}}">
+    <a href="{{- product_ref.url -}}" class="media card-product__media {{ media_classes }}{% if product_ref.media.size > 1 and hover_media != nil %} has-hover{% endif %}" aria-label="{{- product_ref.title -}}">
       {%- liquid
 
         if product_ref.featured_image
@@ -530,7 +530,7 @@
           render 'image', image: product_ref.featured_image, class: class, image_per_view: image_per_view
 
           if variants_media == blank
-            if settings.card_product_image_hover and product_ref.media.size > 1 and hover_media != nil
+            if product_ref.media.size > 1 and hover_media != nil
               assign image_alt = hover_media.alt | default: product_ref.title
               render 'image', image: hover_media, alt: image_alt, class: ' hover-img', image_per_view: image_per_view
             endif

@@ -204,8 +204,13 @@
   }
   
   .collection-plp__subs {
+    display: none;
     margin: 0.8rem 0 0;
     padding-inline-start: 1.6rem;
+  }
+
+  .collection-plp.is-jeans-family .collection-plp__subs {
+    display: block;
   }
 
   .collection-plp__subs-list {

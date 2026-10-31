@@ -42,6 +42,13 @@
   endif
 
   assign product_count = collection.products_count | default: 0
+  assign on_jeans_family = false
+  assign jeans_family = 'jeans|all-jeans|slim-fit-jeans|carpenter-jeans|carpenter-jeans-men|spray-on-jeans|relaxed-fit-jeans|relaxed-jeans' | split: '|'
+  for jeans_handle in jeans_family
+    if collection.handle == jeans_handle
+      assign on_jeans_family = true
+    endif
+  endfor
   assign plp_seen = '|'
   if plp_menu != blank
     for link in plp_menu.links
@@ -55,16 +62,11 @@
 
 {{- 'section-collection-plp.css' | asset_url | stylesheet_tag -}}
 
-<div class="collection-plp collection-sticky-header-wrapper">
+<div class="collection-plp collection-sticky-header-wrapper{% if on_jeans_family %} is-jeans-family{% endif %}">
   <nav class="collection-plp__menu" aria-label="{{- collection.title | escape -}}">
     <ul class="collection-plp__menu-list list-unstyled">
       {%- liquid
         assign plp_nav_items = 'All Products|all-products|all||New Arrivals|new-arrivals||Best Sellers|best-sellers||Jeans|jeans||Jackets|denim-jacket|jackets||Hoodies|hoodies||Joggers|joggers|mens-joggers||T-Shirts|essential-t-shirt-men|t-shirts||Chino Pants|chino-pants|chinos||Polo Shirts|polo-shirt|polo-shirts||Shorts|mens-denim-shorts|shorts||Cargo pants|cargo-pants-for-men|cargo-pants' | split: '||'
-        assign jeans_family = 'jeans|slim-fit-jeans|carpenter-jeans|carpenter-jeans-men|spray-on-jeans|relaxed-fit-jeans|relaxed-jeans' | split: '|'
-        assign on_jeans_family = false
-        if jeans_family contains collection.handle
-          assign on_jeans_family = true
-        endif
       -%}
       {%- for plp_nav_item in plp_nav_items -%}
         {%- liquid

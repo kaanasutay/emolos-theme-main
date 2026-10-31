@@ -127,8 +127,7 @@
         {%- render 'image', image: option_image, width: 120, alt: option_image_alt -%}
       </div>
     {%- elsif size_num != blank and size_len != blank -%}
-      <span class="size-num">{{- size_num | escape -}}</span>
-      <span class="size-len">{{- size_len | escape -}}</span>
+      <span class="size-num">{{- size_num | escape -}}</span><span class="size-slash" aria-hidden="true">/</span><span class="size-len">{{- size_len | escape -}}</span>
     {%- else -%}
       <span>{{- value.label | default: value.name | escape -}}</span>
     {%- endif -%}

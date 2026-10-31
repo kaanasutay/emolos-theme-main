@@ -22,7 +22,7 @@
       "sizes_option": "Size",
       "card_product_layout": "card-product__layout--standard",
       "card_product_image_ratio": "0",
-      "card_product_image_hover": false,
+      "card_product_image_hover": true,
       "product_badge_style": "",
       "button_primary_style": "button--outlined",
       "button_secondary_style": "button--filled",

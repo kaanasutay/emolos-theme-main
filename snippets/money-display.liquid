@@ -1,0 +1,10 @@
+{%- liquid
+  assign money_cents = amount | plus: 0
+  assign money_text = money_cents | money_without_trailing_zeros
+  assign money_remainder = money_cents | modulo: 100
+  if money_remainder == 0
+    assign money_text = money_text | replace: '.00', '' | replace: ',00', ''
+  endif
+  assign money_text = money_text | replace: ' GBP', '' | replace: 'GBP', '' | strip
+  echo money_text
+-%}

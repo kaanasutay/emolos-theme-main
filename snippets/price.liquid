@@ -21,13 +21,16 @@
   assign compare_at_price = target.compare_at_price
   assign price = target.price | default: 1999
   assign available = target.available | default: false
-  assign money_price = price | money_without_trailing_zeros
   assign price_extra_info = price_extra_info | default: false
 
   if target == product_ref and product_ref.price_varies == false
     assign compare_at_price = target.compare_at_price_max
   endif
 -%}
+{%- capture money_price -%}
+  {%- render 'money-display', amount: price -%}
+{%- endcapture -%}
+{%- assign money_price = money_price | strip -%}
 
 <div class="price
   {%- if price_class %} {{ price_class }}{% endif -%}
@@ -68,17 +71,17 @@
           <div class="{{ sale_container_class }}">
             <div class="price__sale-inner">
               <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
-              <del>{{- compare_at_price_max | money_without_trailing_zeros -}}</del>
+              <del>{{- compare_at_price_max | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</del>
 
               <ins>
                 {{- 'products.product.price.from_price' | t -}}
                 <span class="visually-hidden">{{- 'products.product.price.min_price' | t -}}</span>
-                <span {{ min_price_class }}>{{- money_price_min | money_without_trailing_zeros -}}</span>
+                <span {{ min_price_class }}>{{- money_price_min | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</span>
 
                 <span aria-hidden="true">-</span>
 
                 <span class="visually-hidden">{{- 'products.product.price.max_price' | t -}}</span>
-                <span>{{- money_price_max | money_without_trailing_zeros -}}</span>
+                <span>{{- money_price_max | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</span>
               </ins>
             </div>
 
@@ -88,12 +91,12 @@
         {% else %}
           <div class="price__regular">
             <span class="visually-hidden">{{- 'products.product.price.min_price' | t -}}</span>
-            <span>{{- product_ref.price_min | money_without_trailing_zeros -}}</span>
+            <span>{{- product_ref.price_min | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</span>
 
             <span aria-hidden="true">-</span>
 
             <span class="visually-hidden">{{- 'products.product.price.max_price' | t -}}</span>
-            <span>{{- product_ref.price_max | money_without_trailing_zeros -}}</span>
+            <span>{{- product_ref.price_max | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</span>
           </div>
         {%- endif -%}
 
@@ -115,7 +118,7 @@
         <div class="{{ sale_container_class }}">
           <div class="price__sale-inner">
             <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
-            <del>{{- compare_at_price | money_without_trailing_zeros -}}</del>
+            <del>{{- compare_at_price | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</del>
             <span class="visually-hidden">{{- 'products.product.price.sale_price' | t -}}</span>
             <ins>{{- money_price -}}</ins>
           </div>
@@ -137,9 +140,9 @@
           </span>
 
           {%- if settings.show_currency_codes -%}
-            {{- variant.unit_price | money_without_trailing_zeros -}}
+            {{- variant.unit_price | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}
           {%- else -%}
-            {{- variant.unit_price | money_without_trailing_zeros -}}
+            {{- variant.unit_price | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}
           {%- endif -%}
 
           <span aria-hidden="true">/</span>
@@ -170,7 +173,7 @@
         </div>
       {%- endif -%}
     {%- else -%}
-      <span>{{- 9999 | money_without_trailing_zeros -}}</span>
+      <span>{{- 9999 | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}</span>
     {%- endif -%}
   </div>
 </div>
