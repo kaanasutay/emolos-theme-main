@@ -3463,3 +3463,51 @@ html.js .product-info-tabs .accordion__section.is-active .accordion__body {
   flex: 0 0 100% !important;
   margin: 0 !important;
 }
+
+@media screen and (min-width: 990px) {
+  #product-media-gallery,
+  #product-media-gallery > .swiper-wrapper {
+    height: auto !important;
+    transform: none !important;
+  }
+
+  #product-media-gallery {
+    overflow: visible !important;
+  }
+
+  #product-media-gallery > .swiper-wrapper {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    width: 100% !important;
+  }
+
+  #product-media-gallery > .swiper-wrapper > .swiper-slide {
+    position: relative !important;
+    width: auto !important;
+    max-width: none !important;
+    height: auto !important;
+    flex: none !important;
+    margin: 0 !important;
+    opacity: 1 !important;
+    transform: none !important;
+    inset: auto !important;
+  }
+
+  .product__media .product__media-arrows,
+  .product__media .swiper-thumbs-container,
+  .product__media .swiper-thumbs,
+  #product-media-gallery .swiper-pagination {
+    display: none !important;
+  }
+
+  .product__grid__item--content {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+
+  #product-media-gallery > .swiper-wrapper > .swiper-slide:first-child {
+    position: relative !important;
+  }
+}

@@ -546,9 +546,39 @@ html.no-js .hero__swiper-slide {
   .section-hero-banner .hero__swiper,
   .section-hero-banner .hero__swiper-slide,
   .section-hero-banner .hero__inner.hero-banner--full {
-    height: 758px !important;
-    min-height: 758px !important;
+    height: auto !important;
+    min-height: 0 !important;
     max-height: none !important;
+    aspect-ratio: auto !important;
+  }
+
+  .section-hero-banner .hero__inner.hero-banner--full {
+    display: block !important;
+  }
+
+  .section-hero-banner .hero-banner--full .hero__media {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .section-hero-banner .hero-banner--full .hero__media img {
+    position: relative !important;
+    inset: auto !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    object-fit: fill !important;
+    transform: none !important;
+  }
+
+  .section-hero-banner .hero-banner--full .hero__content {
+    position: absolute !important;
+    inset: auto 0 0 0 !important;
+    width: 100%;
   }
 }
 
