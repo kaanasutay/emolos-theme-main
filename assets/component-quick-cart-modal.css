@@ -1785,27 +1785,46 @@ quick-cart-modal .product-options--size legend {
 }
 
 @media screen and (max-width: 749px) {
-  quick-cart-modal .quick-cart-modal__content {
+  quick-cart-modal {
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  quick-cart-modal .quick-cart-modal__content,
+  quick-cart-modal.is--open .quick-cart-modal__content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
     display: flex;
     flex-direction: column;
-    max-height: 85dvh;
+    width: calc(100% - 3.2rem);
+    max-width: 440px;
+    height: auto;
+    max-height: none;
+    margin: 0;
     overflow: hidden;
+    transform: translate(-50%, -50%);
+    flex: none;
   }
 
   quick-cart-modal .quick-cart-modal__main {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
+    display: block;
+    flex: none;
     min-height: 0;
-    max-height: 100%;
-    overflow: hidden;
+    max-height: none;
+    height: auto;
+    overflow: visible;
   }
 
   quick-cart-modal .quick-cart-product-modal {
-    flex: 1 1 auto;
+    flex: none;
     min-height: 0;
     height: auto;
-    max-height: none;
+    max-height: 85dvh;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1819,5 +1838,35 @@ quick-cart-modal .product-options--size legend {
   quick-cart-modal .quick-cart-product-modal__media .swiper-slide {
     touch-action: pan-y;
   }
+}
+
+dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-modal__window {
+  position: relative;
+}
+
+dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-modal__close {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: auto;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid #1c1c1c;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: none;
+  color: #111;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
 }
 

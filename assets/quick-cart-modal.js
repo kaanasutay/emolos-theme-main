@@ -505,7 +505,7 @@ if (!customElements.get('quick-cart-modal')) {
 
       const firstFocusableElement = this.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
       if (firstFocusableElement) {
-        firstFocusableElement.focus();
+        firstFocusableElement.focus({ preventScroll: true });
       }
     }
 
