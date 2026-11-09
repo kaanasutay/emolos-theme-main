@@ -21,6 +21,7 @@ if (!customElements.get('quick-cart-modal')) {
       }
 
       this.querySelector('.quick-cart-modal__backdrop').addEventListener('click', this.close.bind(this));
+      this.bindSizeChart();
 
       this.querySelector('.quick-cart-modal__content').addEventListener('keydown', e => {
         if (e.key === 'Escape' && this.toggleState) {
@@ -130,6 +131,10 @@ if (!customElements.get('quick-cart-modal')) {
         const quickCartProductModal = productCard.querySelector('.quick-cart-product-modal');
         if (!quickCartProductModal) return;
 
+        document.querySelectorAll('body > dialog.product-size-guide-modal[id^="SizeGuide-modal-"]').forEach((dialog) => {
+          dialog.remove();
+        });
+
         this.querySelector('.quick-cart-modal__main').innerHTML = '';
         this.querySelector('.quick-cart-modal__main').append(quickCartProductModal);
 
@@ -218,6 +223,8 @@ if (!customElements.get('quick-cart-modal')) {
         observeSlideChildren: true,
         watchOverflow: true,
         allowTouchMove: true,
+        touchStartPreventDefault: false,
+        touchReleaseOnEdges: true,
         navigation: prevEl && nextEl ? { prevEl, nextEl } : false,
         breakpoints: {
           750: {
@@ -230,56 +237,79 @@ if (!customElements.get('quick-cart-modal')) {
       requestAnimationFrame(() => this.sliderInstance?.update?.());
     }
 
-    initSizeChart() {
-      const chart = this.querySelector('.quick-cart-size-chart');
-      if (!chart) return;
+    bindSizeChart() {
+      if (this.sizeChartBound) return;
+      this.sizeChartBound = true;
 
-      const open = () => {
-        chart.hidden = false;
-      };
-      const close = event => {
-        event?.preventDefault();
-        event?.stopPropagation();
-        chart.hidden = true;
-      };
-
-      this.querySelectorAll('.quick-cart-size-chart__trigger').forEach(trigger => {
-        trigger.addEventListener('click', event => {
-          const dialogId = trigger.getAttribute('aria-controls');
-          const dialog = dialogId ? document.getElementById(dialogId) : null;
-          if (dialog) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (dialog.parentElement !== document.body) document.body.appendChild(dialog);
-            if (typeof dialog.showModal === 'function') {
-              if (!dialog.open) dialog.showModal();
-            } else {
-              dialog.setAttribute('open', '');
-            }
-            return;
-          }
+      this.addEventListener('click', (event) => {
+        const trigger = event.target.closest('.quick-cart-size-chart__trigger');
+        if (trigger && this.contains(trigger)) {
           event.preventDefault();
           event.stopPropagation();
-          open();
-        });
-      });
+          this.openSizeChart(trigger);
+          return;
+        }
 
-      chart.querySelector('.quick-cart-size-chart__close')?.addEventListener('click', close);
-      chart.addEventListener('click', event => {
-        if (event.target === chart) close(event);
-      });
-
-      chart.querySelectorAll('.quick-cart-size-chart__unit').forEach(button => {
-        button.addEventListener('click', () => {
-          const unit = button.dataset.unit;
-          chart.querySelectorAll('.quick-cart-size-chart__unit').forEach(el => {
-            el.classList.toggle('is-active', el === button);
+        const unitButton = event.target.closest('.quick-cart-size-chart__unit');
+        if (unitButton && this.contains(unitButton)) {
+          const chart = unitButton.closest('.quick-cart-size-chart');
+          if (!chart) return;
+          const unit = unitButton.dataset.unit;
+          chart.querySelectorAll('.quick-cart-size-chart__unit').forEach((el) => {
+            el.classList.toggle('is-active', el === unitButton);
           });
-          chart.querySelectorAll('[data-unit-table]').forEach(table => {
+          chart.querySelectorAll('[data-unit-table]').forEach((table) => {
             table.hidden = table.dataset.unitTable !== unit;
           });
-        });
+          return;
+        }
+
+        const chart = event.target.closest('.quick-cart-size-chart');
+        if (!chart || !this.contains(chart) || chart.hidden) return;
+        const closeButton = event.target.closest('.quick-cart-size-chart__close');
+        if (closeButton || event.target === chart) {
+          event.preventDefault();
+          event.stopPropagation();
+          chart.hidden = true;
+        }
       });
+
+      document.addEventListener('click', (event) => {
+        const dialog = event.target.closest('dialog.product-size-guide-modal');
+        if (!dialog || !dialog.id.startsWith('SizeGuide-modal-')) return;
+        const closeButton = event.target.closest('.js-size-guide-close, .product-size-guide-modal__close');
+        if (!closeButton && event.target !== dialog) return;
+        event.preventDefault();
+        event.stopPropagation();
+        this.closeSizeGuideDialog(dialog);
+      });
+    }
+
+    openSizeChart(trigger) {
+      const dialogId = trigger.getAttribute('aria-controls');
+      const dialog = dialogId ? document.getElementById(dialogId) : null;
+      if (dialog) {
+        if (dialog.parentElement !== document.body) document.body.appendChild(dialog);
+        if (typeof dialog.showModal === 'function') {
+          if (!dialog.open) dialog.showModal();
+        } else {
+          dialog.setAttribute('open', '');
+        }
+        return;
+      }
+
+      const chart = this.querySelector('.quick-cart-size-chart');
+      if (chart) chart.hidden = false;
+    }
+
+    closeSizeGuideDialog(dialog) {
+      if (!dialog) return;
+      if (typeof dialog.close === 'function') dialog.close();
+      else dialog.removeAttribute('open');
+    }
+
+    initSizeChart() {
+      this.bindSizeChart();
     }
 
     initVariantSelection() {
@@ -497,6 +527,9 @@ if (!customElements.get('quick-cart-modal')) {
       }
       const sizeChart = this.querySelector('.quick-cart-size-chart');
       if (sizeChart) sizeChart.hidden = true;
+      document.querySelectorAll('dialog.product-size-guide-modal[id^="SizeGuide-modal-"][open]').forEach((dialog) => {
+        this.closeSizeGuideDialog(dialog);
+      });
       this.closed();
       this.toggleAriaExpanded();
 

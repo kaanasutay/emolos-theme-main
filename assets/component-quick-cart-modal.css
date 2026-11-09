@@ -1784,3 +1784,40 @@ quick-cart-modal .product-options--size legend {
   padding: 0 !important;
 }
 
+@media screen and (max-width: 749px) {
+  quick-cart-modal .quick-cart-modal__content {
+    display: flex;
+    flex-direction: column;
+    max-height: 85dvh;
+    overflow: hidden;
+  }
+
+  quick-cart-modal .quick-cart-modal__main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden;
+  }
+
+  quick-cart-modal .quick-cart-product-modal {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y;
+    padding-bottom: calc(1.6rem + env(safe-area-inset-bottom));
+  }
+
+  quick-cart-modal .quick-cart-product-modal__media .swiper,
+  quick-cart-modal .quick-cart-product-modal__media .swiper-wrapper,
+  quick-cart-modal .quick-cart-product-modal__media .swiper-slide {
+    touch-action: pan-y;
+  }
+}
+
