@@ -1807,8 +1807,30 @@ quick-cart-modal .product-options--size legend {
     max-height: none;
     margin: 0;
     overflow: hidden;
+    border-radius: 0;
     transform: translate(-50%, -50%);
     flex: none;
+  }
+
+  quick-cart-modal .product__grid__item--media,
+  quick-cart-modal .quick-cart-product-modal__media,
+  quick-cart-modal .quick-cart-product-modal__media .swiper {
+    z-index: 1;
+  }
+
+  quick-cart-modal .quick-cart-product-modal > .button--close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    left: auto;
+    z-index: 40;
+    display: flex;
+    width: 3.7rem;
+    height: 3.7rem;
+    margin: 0;
+    border-radius: 50%;
+    background-color: #fff;
+    pointer-events: auto;
   }
 
   quick-cart-modal .quick-cart-modal__main {
@@ -1845,9 +1867,9 @@ dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-moda
 }
 
 dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-modal__close {
-  position: absolute;
-  top: 12px;
-  left: 12px;
+  position: relative;
+  top: auto;
+  left: auto;
   right: auto;
   z-index: 3;
   display: flex;
@@ -1858,7 +1880,7 @@ dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-moda
   height: 36px;
   min-width: 36px;
   min-height: 36px;
-  margin: 0;
+  margin: 16px 16px 12px;
   padding: 0;
   border: 1px solid #1c1c1c;
   border-radius: 0;
@@ -1868,5 +1890,13 @@ dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-moda
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
+}
+
+dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-modal__content {
+  padding-top: 0;
+}
+
+dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-modal__title {
+  margin-top: 4px !important;
 }
 
