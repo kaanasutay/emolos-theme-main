@@ -178,23 +178,14 @@
 
     .shop-by-category__slider-wrap,
     shop-by-category-slider.shop-by-category__slider {
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      scroll-padding-left: 16px;
-      -webkit-overflow-scrolling: touch;
+      overflow: hidden;
+      touch-action: pan-y;
     }
 
     .shop-by-category__track {
-      transform: none !important;
       padding-left: 16px;
       padding-right: 16px;
       gap: 12px;
-    }
-
-    .shop-by-category__slide {
-      scroll-snap-align: start;
-      scroll-snap-stop: always;
     }
 
     .shop-by-category__title {

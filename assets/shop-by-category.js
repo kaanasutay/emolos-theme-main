@@ -14,7 +14,7 @@ if (!customElements.get('shop-by-category-slider')) {
         this.raf = null;
         this.lastTime = 0;
         this.bound = false;
-        this.mobileQuery = window.matchMedia('(max-width: 767px)');
+        this.mobileQuery = window.matchMedia('(max-width: 749px)');
         this.onMode = () => this.setup();
         this.mobileQuery.addEventListener('change', this.onMode);
         this.setup();
@@ -27,7 +27,7 @@ if (!customElements.get('shop-by-category-slider')) {
       }
 
       isMobile() {
-        return this.mobileQuery ? this.mobileQuery.matches : window.innerWidth <= 767;
+        return this.mobileQuery ? this.mobileQuery.matches : window.innerWidth <= 749;
       }
 
       setup() {
@@ -35,11 +35,7 @@ if (!customElements.get('shop-by-category-slider')) {
         this.offset = 0;
         this.track.style.transform = 'none';
         this.track.querySelectorAll('[data-clone]').forEach((node) => node.remove());
-
-        if (!this.isMobile()) {
-          this.prepareLoop();
-        }
-
+        this.prepareLoop();
         this.sizeSlides();
         this.originalCount = this.track.querySelectorAll('.shop-by-category__slide:not([data-clone])').length;
 
@@ -47,8 +43,6 @@ if (!customElements.get('shop-by-category-slider')) {
           this.bind();
           this.bound = true;
         }
-
-        if (this.isMobile()) return;
 
         requestAnimationFrame(() => {
           this.measure();
@@ -102,7 +96,9 @@ if (!customElements.get('shop-by-category-slider')) {
   
         const first = originals[0].getBoundingClientRect();
         const last = originals[originals.length - 1].getBoundingClientRect();
-        this.setWidth = last.right - first.left + 2;
+        const styles = getComputedStyle(this.track);
+        const gap = parseFloat(styles.columnGap || styles.gap) || 0;
+        this.setWidth = last.right - first.left + gap;
       }
   
       bind() {
@@ -110,10 +106,12 @@ if (!customElements.get('shop-by-category-slider')) {
         const wrap = this.closest('.shop-by-category__slider-wrap');
   
         const pause = () => {
+          if (this.isMobile()) return;
           this.hovering = true;
           this.paused = true;
         };
         const resume = () => {
+          if (this.isMobile()) return;
           this.hovering = false;
           if (!this.animating) {
             this.paused = false;
@@ -138,17 +136,72 @@ if (!customElements.get('shop-by-category-slider')) {
         }
   
         this.onResize = () => {
-          if (this.isMobile()) {
-            this.track.style.transform = 'none';
-            this.sizeSlides();
-            return;
-          }
           this.sizeSlides();
           this.measure();
-          this.offset = this.setWidth ? this.offset % this.setWidth : 0;
+          this.offset = this.setWidth ? this.wrapOffset(this.offset) : 0;
           this.render();
         };
         window.addEventListener('resize', this.onResize);
+        this.bindDrag(wrap);
+      }
+
+      bindDrag(wrap) {
+        let dragging = false;
+        let pointerId = null;
+        let startX = 0;
+        let startY = 0;
+        let startOffset = 0;
+        let axis = '';
+        let moved = false;
+
+        const finish = (event) => {
+          if (!dragging || event.pointerId !== pointerId) return;
+          dragging = false;
+          axis = '';
+          if (moved) {
+            const blockClick = (clickEvent) => {
+              clickEvent.preventDefault();
+              clickEvent.stopPropagation();
+              wrap.removeEventListener('click', blockClick, true);
+            };
+            wrap.addEventListener('click', blockClick, true);
+          }
+          this.paused = false;
+          this.hovering = false;
+          this.lastTime = 0;
+        };
+
+        wrap.addEventListener('pointerdown', (event) => {
+          if (!this.isMobile() || !this.setWidth) return;
+          if (event.pointerType === 'mouse' && event.button !== 0) return;
+          dragging = true;
+          moved = false;
+          axis = '';
+          pointerId = event.pointerId;
+          startX = event.clientX;
+          startY = event.clientY;
+          startOffset = this.offset;
+          this.paused = true;
+          this.animating = false;
+        });
+
+        wrap.addEventListener('pointermove', (event) => {
+          if (!dragging || event.pointerId !== pointerId) return;
+          const dx = event.clientX - startX;
+          const dy = event.clientY - startY;
+          if (!axis) {
+            if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+            axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+          }
+          if (axis !== 'x') return;
+          moved = true;
+          if (event.cancelable) event.preventDefault();
+          this.offset = this.wrapOffset(startOffset - dx);
+          this.render();
+        }, { passive: false });
+
+        wrap.addEventListener('pointerup', finish);
+        wrap.addEventListener('pointercancel', finish);
       }
   
       start() {
