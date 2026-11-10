@@ -137,7 +137,7 @@
       "name": "New In",
       "settings": {
         "layout": "right",
-        "eyebrow": "TRENDING",
+        "eyebrow": "",
         "heading": "NEW ARRIVALS",
         "content": "<p>Discover Our New Arrivals</p>",
         "link_label": "SHOP NEW IN",
