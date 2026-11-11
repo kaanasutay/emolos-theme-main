@@ -2805,10 +2805,24 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 }
 
 .product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__label,
-.product__content .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label {
-  color: #b3b3b3;
+.product__content .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label,
+.product__content .product-options--size .product-options__item:has(input:disabled) .product-options__label {
   background: #f2f2f2;
   border-color: #e0e0e0;
+}
+
+.product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__label,
+.product__content .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label,
+.product__content .product-options--size .product-options__item:has(input:disabled) .product-options__label,
+.product__content .product-options--size .product-options__item.product-options__item--disabled .size-num,
+.product__content .product-options--size .product-options__item.product-options__item--disabled .size-slash,
+.product__content .product-options--size .product-options__item.product-options__item--disabled .size-len,
+.product__content .product-options--size .product-options__item:has(input:disabled) .size-num,
+.product__content .product-options--size .product-options__item:has(input:disabled) .size-slash,
+.product__content .product-options--size .product-options__item:has(input:disabled) .size-len {
+  color: #9a9a9a !important;
+  text-decoration: line-through !important;
+  text-decoration-color: #9a9a9a !important;
 }
 
 .product__content .product-options--size .product-options__item.product-options__item--disabled,
