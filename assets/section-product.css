@@ -2809,8 +2809,8 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 .product__content .product-options--size .product-options__item:has(input:disabled) .product-options__label {
   position: relative;
   border-color: #e0e0e0;
-  background-color: #f6f6f6 !important;
-  background-image: linear-gradient(to top left, transparent 48%, #8c8c8c 49%, #8c8c8c 51%, transparent 52%) !important;
+  background-color: #f3f3f3 !important;
+  background-image: linear-gradient(to top left, transparent calc(50% - 0.5px), #cccccc calc(50% - 0.5px), #cccccc calc(50% + 0.5px), transparent calc(50% + 0.5px)) !important;
 }
 
 .product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__label,
@@ -2827,6 +2827,7 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 .product__content .product-options--size .product-options__item:has(input:disabled) .size-len,
 .product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__sizing-text,
 .product__content .product-options--size .product-options__item:has(input:disabled) .product-options__sizing-text {
+  color: #a6a6a6 !important;
   text-decoration: none !important;
   text-decoration-line: none !important;
 }
