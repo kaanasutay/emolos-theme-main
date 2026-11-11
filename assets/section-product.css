@@ -2039,6 +2039,7 @@ section .product__gallery-breadcrumbs.breadcrumbs {
     font-size: 13px;
     min-height: 36px !important;
     padding: 10px 14px !important;
+    white-space: nowrap;
   }
 
   .product__grid--has-media {

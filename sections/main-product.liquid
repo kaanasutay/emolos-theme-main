@@ -229,11 +229,54 @@
                       assign gallery_sale_percent = gallery_variant.compare_at_price | minus: gallery_variant.price | times: 100.0 | divided_by: gallery_variant.compare_at_price | round
                     endif
 
-                    assign model_info = section.settings.model_info
-                    if product.metafields.custom.model_info.value != blank
-                      assign model_info = product.metafields.custom.model_info.value
-                    elsif product.metafields.theme.model_info.value != blank
-                      assign model_info = product.metafields.theme.model_info.value
+                    assign model_size = blank
+                    assign model_source = product.title | append: ' ' | append: product.type | append: ' ' | append: product.handle
+                    for model_tag in product.tags
+                      assign model_source = model_source | append: ' ' | append: model_tag
+                    endfor
+                    for model_collection in product.collections
+                      assign model_source = model_source | append: ' ' | append: model_collection.title | append: ' ' | append: model_collection.handle
+                    endfor
+                    assign model_source = model_source | downcase | replace: '-', ' ' | replace: '_', ' ' | replace: '/', ' '
+                    assign model_source = model_source | replace: '  ', ' ' | replace: '  ', ' ' | replace: '  ', ' ' | replace: '  ', ' '
+                    assign model_source = model_source | strip
+                    assign model_source = ' ' | append: model_source | append: ' '
+
+                    if model_source contains ' spray on '
+                      assign model_size = '32/30'
+                    elsif model_source contains ' cargo jeans ' or model_source contains ' cargo denim '
+                      assign model_size = '32'
+                    elsif model_source contains ' cargo pant' or model_source contains ' cargo trouser'
+                      assign model_size = 'M'
+                    elsif model_source contains ' jacket '
+                      assign model_size = 'M'
+                    elsif model_source contains ' hoodie ' or model_source contains ' zip up ' or model_source contains ' zipup ' or model_source contains ' sweatshirt '
+                      assign model_size = 'M'
+                    elsif model_source contains ' tracksuit ' or model_source contains ' sweatpants ' or model_source contains ' jogger'
+                      assign model_size = 'M'
+                    elsif model_source contains ' t shirt ' or model_source contains ' tshirt ' or model_source contains ' tee '
+                      assign model_size = 'M'
+                    elsif model_source contains ' polo'
+                      assign model_size = 'M'
+                    elsif model_source contains ' slim fit '
+                      assign model_size = '32/32'
+                    elsif model_source contains ' relaxed fit ' or model_source contains ' carpenter ' or model_source contains ' chino ' or model_source contains ' shorts '
+                      assign model_size = '32'
+                    elsif model_source contains ' short '
+                      unless model_source contains ' short sleeve '
+                        assign model_size = '32'
+                      endunless
+                    endif
+
+                    if model_size != blank
+                      assign model_info = 'Model is 1.80 m Wearing Size ' | append: model_size
+                    else
+                      assign model_info = section.settings.model_info
+                      if product.metafields.custom.model_info.value != blank
+                        assign model_info = product.metafields.custom.model_info.value
+                      elsif product.metafields.theme.model_info.value != blank
+                        assign model_info = product.metafields.theme.model_info.value
+                      endif
                     endif
                   -%}
 
@@ -1105,8 +1148,8 @@
       "type": "text",
       "id": "model_info",
       "label": "Model info",
-      "info": "Shown on the gallery image, left-aligned. Override per product with metafield custom.model_info or theme.model_info.",
-      "default": "Model is 1.81m Wearing Size 32\""
+      "info": "Fallback when the product category does not match a model size. Known categories show Model is 1.80 m Wearing Size 32/30, 32/32, 32, or M.",
+      "default": "Model is 1.80 m Wearing Size M"
     },
     {
       "type": "header",
