@@ -931,18 +931,29 @@ quick-cart-modal .product-options--size .size-len {
   line-height: 1 !important;
 }
 
+quick-cart-modal .product-options--size .product-options__item::after,
+quick-cart-modal .product-options--size .product-options__label::after {
+  content: none !important;
+  background: none !important;
+}
+
 quick-cart-modal .product-options--size .product-options__item.product-options__item--disabled .product-options__label,
 quick-cart-modal .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label,
-quick-cart-modal .product-options--size .product-options__item:has(input:disabled) .product-options__label,
-quick-cart-modal .product-options--size .product-options__item.product-options__item--disabled .size-num,
-quick-cart-modal .product-options--size .product-options__item.product-options__item--disabled .size-slash,
-quick-cart-modal .product-options--size .product-options__item.product-options__item--disabled .size-len,
-quick-cart-modal .product-options--size .product-options__item:has(input:disabled) .size-num,
-quick-cart-modal .product-options--size .product-options__item:has(input:disabled) .size-slash,
-quick-cart-modal .product-options--size .product-options__item:has(input:disabled) .size-len {
-  color: #9a9a9a !important;
-  text-decoration: line-through !important;
-  text-decoration-color: #9a9a9a !important;
+quick-cart-modal .product-options--size .product-options__item:has(input:disabled) .product-options__label {
+  position: relative;
+  text-decoration: none !important;
+}
+
+quick-cart-modal .product-options--size .product-options__item.product-options__item--disabled .product-options__label::after,
+quick-cart-modal .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label::after,
+quick-cart-modal .product-options--size .product-options__item:has(input:disabled) .product-options__label::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(to top right, transparent 48%, #8c8c8c 49%, #8c8c8c 51%, transparent 52%) !important;
 }
 
 quick-cart-modal .product-selector__quantity,

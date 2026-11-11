@@ -2807,22 +2807,10 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 .product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__label,
 .product__content .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label,
 .product__content .product-options--size .product-options__item:has(input:disabled) .product-options__label {
+  position: relative;
   background: #f2f2f2;
   border-color: #e0e0e0;
-}
-
-.product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__label,
-.product__content .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label,
-.product__content .product-options--size .product-options__item:has(input:disabled) .product-options__label,
-.product__content .product-options--size .product-options__item.product-options__item--disabled .size-num,
-.product__content .product-options--size .product-options__item.product-options__item--disabled .size-slash,
-.product__content .product-options--size .product-options__item.product-options__item--disabled .size-len,
-.product__content .product-options--size .product-options__item:has(input:disabled) .size-num,
-.product__content .product-options--size .product-options__item:has(input:disabled) .size-slash,
-.product__content .product-options--size .product-options__item:has(input:disabled) .size-len {
-  color: #9a9a9a !important;
-  text-decoration: line-through !important;
-  text-decoration-color: #9a9a9a !important;
+  text-decoration: none !important;
 }
 
 .product__content .product-options--size .product-options__item.product-options__item--disabled,
@@ -2837,6 +2825,19 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 .product__content .product-options--size .product-options__input:disabled + .product-options__label::after {
   content: none !important;
   background: none !important;
+}
+
+.product__content .product-options--size .product-options__item.product-options__item--disabled .product-options__label::after,
+.product__content .product-options--size .product-options__item:has(.product-options__input:disabled) .product-options__label::after,
+.product__content .product-options--size .product-options__item:has(input:disabled) .product-options__label::after,
+.product__content .product-options--size .product-options__input:disabled + .product-options__label::after {
+  content: '' !important;
+  display: block !important;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(to top right, transparent 48%, #8c8c8c 49%, #8c8c8c 51%, transparent 52%) !important;
 }
 
 .product__content .product-options--size .product-options__item:has(.size-num),
