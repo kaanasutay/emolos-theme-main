@@ -162,7 +162,7 @@
         "logo_width_mobile": 100,
         "logo_font_size": 1.5,
         "menu": "main-menu",
-        "menu_mobile": "emolos-serkan-men",
+        "menu_mobile": "main-menu",
         "submenu": "",
         "menu_column_count": 6,
         "country_drawer_header": false,
