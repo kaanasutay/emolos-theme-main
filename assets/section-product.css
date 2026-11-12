@@ -1783,8 +1783,8 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 
 .product__model-info {
   position: absolute;
-  left: 12px;
-  bottom: 12px;
+  left: 16px;
+  bottom: 20px;
   z-index: 4;
   margin: 0;
   max-width: calc(100% - 24px);
@@ -2035,7 +2035,7 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 
   .product__model-info {
     left: 16px;
-    bottom: 16px;
+    bottom: 20px;
     font-size: 13px;
     min-height: 36px !important;
     padding: 10px 14px !important;
