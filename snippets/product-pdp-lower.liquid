@@ -19,6 +19,78 @@
   elsif shop.refund_policy != blank and shop.refund_policy.body != blank
     assign returns_html = shop.refund_policy.body
   endif
+
+  assign delivery_policy_url = '/policies/shipping-policy'
+  if shop.shipping_policy != blank and shop.shipping_policy.url != blank
+    assign delivery_policy_url = shop.shipping_policy.url
+  endif
+
+  assign returns_policy_url = '/policies/refund-policy'
+  if shop.refund_policy != blank and shop.refund_policy.url != blank
+    assign returns_policy_url = shop.refund_policy.url
+  endif
+
+  assign delivery_visible = delivery_html
+  if delivery_visible contains '<h3'
+    assign delivery_visible = delivery_visible | split: '<h3' | first
+  endif
+  if delivery_visible contains 'Taxes &amp; Duties'
+    assign delivery_visible = delivery_visible | split: 'Taxes &amp; Duties' | first
+  elsif delivery_visible contains 'Taxes & Duties'
+    assign delivery_visible = delivery_visible | split: 'Taxes & Duties' | first
+  endif
+  if delivery_visible contains 'Important Notice'
+    assign delivery_visible = delivery_visible | split: 'Important Notice' | first
+  endif
+  if delivery_html != blank and delivery_visible != delivery_html
+    assign delivery_parts = delivery_visible | split: '<p'
+    assign delivery_visible = ''
+    for delivery_part in delivery_parts
+      assign delivery_keep = true
+      if forloop.last
+        unless delivery_part contains '</p>'
+          assign delivery_keep = false
+        endunless
+      endif
+      if delivery_keep
+        if forloop.first
+          assign delivery_visible = delivery_part
+        else
+          assign delivery_visible = delivery_visible | append: '<p' | append: delivery_part
+        endif
+      endif
+    endfor
+  endif
+
+  assign returns_visible = returns_html
+  if returns_visible contains 'Returns Within the UK'
+    assign returns_visible = returns_visible | split: 'Returns Within the UK' | first
+  endif
+  if returns_visible contains 'Returns from Outside the UK'
+    assign returns_visible = returns_visible | split: 'Returns from Outside the UK' | first
+  endif
+  if returns_visible contains 'Returns From Outside the UK'
+    assign returns_visible = returns_visible | split: 'Returns From Outside the UK' | first
+  endif
+  if returns_html != blank and returns_visible != returns_html
+    assign returns_parts = returns_visible | split: '<p'
+    assign returns_visible = ''
+    for returns_part in returns_parts
+      assign returns_keep = true
+      if forloop.last
+        unless returns_part contains '</p>'
+          assign returns_keep = false
+        endunless
+      endif
+      if returns_keep
+        if forloop.first
+          assign returns_visible = returns_part
+        else
+          assign returns_visible = returns_visible | append: '<p' | append: returns_part
+        endif
+      endif
+    endfor
+  endif
 -%}
 
 <div class="product-pdp-lower">
@@ -61,7 +133,7 @@
   </div>
 
   <accordion-default class="accordion product-info-tabs">
-    <details class="accordion__section is-active" id="Details-description-{{ section.id }}" open>
+    <details class="accordion__section is-active default-active" id="Details-description-{{ section.id }}" open>
       <summary class="accordion__button product-info-tabs__btn js-btn" id="Details-Summary-description-{{ section.id }}">
         <span>{{- 'products.product.tabs.description' | t -}}</span>
         <span class="product-info-plus" aria-hidden="true">
@@ -90,11 +162,12 @@
       </summary>
       <div class="accordion__body" id="Details-Content-delivery-{{ section.id }}">
         <div class="accordion__body-inner rte">
-          {%- if delivery_html != blank -%}
-            {{- delivery_html -}}
+          {%- if delivery_visible != blank -%}
+            {{- delivery_visible -}}
           {%- else -%}
             <p>{{- 'products.product.delivery_fallback' | t -}}</p>
           {%- endif -%}
+          <p class="product-info-tabs__policy-link">For more details, please visit our <a href="{{ delivery_policy_url }}">Delivery Policy</a>.</p>
         </div>
       </div>
     </details>
@@ -110,11 +183,12 @@
       </summary>
       <div class="accordion__body" id="Details-Content-returns-{{ section.id }}">
         <div class="accordion__body-inner rte">
-          {%- if returns_html != blank -%}
-            {{- returns_html -}}
+          {%- if returns_visible != blank -%}
+            {{- returns_visible -}}
           {%- else -%}
             <p>{{- 'products.product.returns_fallback' | t -}}</p>
           {%- endif -%}
+          <p class="product-info-tabs__policy-link">For more details, please visit our <a href="{{ returns_policy_url }}">Return Policy</a>.</p>
         </div>
       </div>
     </details>

@@ -3092,19 +3092,36 @@ html.no-js .product-info-tabs .accordion__section[open] .product-info-plus,
   display: none;
 }
 
-html.js .product-info-tabs .accordion__section.is-active .accordion__body {
+html.js .product-info-tabs .accordion__section.is-active .accordion__body,
+html.js .product-info-tabs .accordion__section.default-active .accordion__body {
   height: auto;
+  max-height: none;
   opacity: 1;
   transform: none;
 }
 
 .product-info-tabs .accordion__body-inner {
   padding: 4px 0 16px;
+  max-height: none;
+  overflow: visible;
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: unset;
   font-family: var(--font-body-family);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.65;
   color: #000;
+}
+
+.product-info-tabs .product-info-tabs__policy-link {
+  margin-top: 12px;
+}
+
+.product-info-tabs .product-info-tabs__policy-link a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .product-info-tabs .accordion__body-inner p {
