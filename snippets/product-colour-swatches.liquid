@@ -25,31 +25,45 @@
 
   assign colour_collection_handle = ''
   assign colour_match_best = 0
-  assign colour_match_mode = ''
-  if colour_list == blank and has_colour_option == false
-    for collection in product.collections
-      assign colour_match_count = 0
-      for colour_product in collection.products
-        if product.template_suffix != blank and colour_product.template_suffix == product.template_suffix
-          assign colour_match_count = colour_match_count | plus: 1
-        elsif product.template_suffix == blank and product.type != blank and colour_product.type == product.type
-          assign colour_match_count = colour_match_count | plus: 1
-        endif
-      endfor
-      if colour_match_count > colour_match_best
-        if product.template_suffix != blank or colour_match_count < 16
-          assign colour_match_best = colour_match_count
-          assign colour_collection_handle = collection.handle
-          if product.template_suffix != blank
-            assign colour_match_mode = 'template'
-          else
-            assign colour_match_mode = 'type'
-          endif
-        endif
-      endif
-    endfor
+  assign product_type_key = product.type | downcase | strip
+  assign generic_type_list = '|jacket|jackets|sweatpant|sweatpants|jean|jeans|short|shorts|pant|pants|hoodie|hoodies|t-shirt|tshirt|t shirt|shirt|jogger|joggers|'
+  assign product_type_is_generic = false
+  if generic_type_list contains '|' | append: product_type_key | append: '|'
+    assign product_type_is_generic = true
   endif
 -%}
+{%- capture product_model_key -%}
+  {%- render 'product-colour-model', title: product.title -%}
+{%- endcapture -%}
+{%- assign product_model_key = product_model_key | strip -%}
+
+{%- if colour_list == blank and has_colour_option == false and product_type_key != blank -%}
+  {%- for collection in product.collections -%}
+    {%- assign colour_match_count = 0 -%}
+    {%- for colour_product in collection.products -%}
+      {%- assign colour_type_key = colour_product.type | downcase | strip -%}
+      {%- if colour_type_key == product_type_key -%}
+        {%- assign colour_model_ok = true -%}
+        {%- if product_type_is_generic -%}
+          {%- capture candidate_model_key -%}
+            {%- render 'product-colour-model', title: colour_product.title -%}
+          {%- endcapture -%}
+          {%- assign candidate_model_key = candidate_model_key | strip -%}
+          {%- if candidate_model_key == blank or candidate_model_key != product_model_key -%}
+            {%- assign colour_model_ok = false -%}
+          {%- endif -%}
+        {%- endif -%}
+        {%- if colour_model_ok -%}
+          {%- assign colour_match_count = colour_match_count | plus: 1 -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if colour_match_count > colour_match_best and colour_match_count < 16 -%}
+      {%- assign colour_match_best = colour_match_count -%}
+      {%- assign colour_collection_handle = collection.handle -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 
 {%- unless has_colour_option -%}
   {%- capture colour_items -%}
@@ -70,14 +84,20 @@
     {%- elsif colour_collection_handle != blank and colour_match_best > 1 -%}
       {%- assign colour_collection = collections[colour_collection_handle] -%}
       {%- for colour_product in colour_collection.products -%}
-        {%- liquid
-          assign colour_is_match = false
-          if colour_match_mode == 'template' and colour_product.template_suffix == product.template_suffix
-            assign colour_is_match = true
-          elsif colour_match_mode == 'type' and colour_product.type == product.type
-            assign colour_is_match = true
-          endif
-        -%}
+        {%- assign colour_is_match = false -%}
+        {%- assign colour_type_key = colour_product.type | downcase | strip -%}
+        {%- if colour_type_key == product_type_key -%}
+          {%- assign colour_is_match = true -%}
+          {%- if product_type_is_generic -%}
+            {%- capture candidate_model_key -%}
+              {%- render 'product-colour-model', title: colour_product.title -%}
+            {%- endcapture -%}
+            {%- assign candidate_model_key = candidate_model_key | strip -%}
+            {%- if candidate_model_key == blank or candidate_model_key != product_model_key -%}
+              {%- assign colour_is_match = false -%}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
         {%- if colour_is_match and colour_product.featured_image -%}
           <a
             href="{{ colour_product.url }}"

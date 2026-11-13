@@ -2445,6 +2445,11 @@ section .product__gallery-breadcrumbs.breadcrumbs {
   margin-top: 0;
 }
 
+.product.js-product .product__grid__item--content king-linked-options-product,
+.product.js-product .product__grid__item--content .lv-option-box {
+  display: none !important;
+}
+
 .product__content .product-options.product-colour-swatches,
 .product__content .product-colour-swatches,
 .product__content .product-options--colour {
