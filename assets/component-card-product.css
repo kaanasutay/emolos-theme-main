@@ -84,8 +84,12 @@ card-product.card-product.card-product__layout--standard {
   min-width: 0;
 }
 .card-product__layout--standard .card-product__overlay-content {
-  inset-block-start: unset;
-  inset-block-end: 1.2rem;
+  inset-block-start: 0;
+  inset-block-end: auto;
+  inset-inline-start: 0;
+  inset-inline-end: auto;
+  width: auto;
+  justify-content: flex-start;
 }
 
 .card-product__overlay-content > :only-child {
@@ -357,13 +361,14 @@ input:disabled + .card-product__swatch {
   transform: none;
 }
 
-.card-product__layout--compact .marquee-tags {
-  position: relative;
-}
+.card-product__layout--compact .marquee-tags,
 .card-product__layout--standard .marquee-tags {
   position: absolute;
-  inset-block-end: 0;
-  inset-inline-start: 0;
+  top: 12px;
+  left: 12px;
+  right: auto;
+  bottom: auto;
+  margin: 0;
 }
 
 @media screen and (min-width: 750px) {
@@ -373,9 +378,10 @@ input:disabled + .card-product__swatch {
   }
 
   .card-product__layout--standard .card-product__overlay-content {
-    inset-block-start: unset;
-    inset-block-end: 1.6rem;
-    inset-inline: 1.6rem;
+    inset-block-start: 0;
+    inset-block-end: auto;
+    inset-inline-start: 0;
+    inset-inline-end: auto;
   }
 
   .card-product__sizes {
@@ -511,4 +517,31 @@ input:disabled + .card-product__swatch {
 .card-product button.wk-button svg {
   width: 12px !important;
   height: 12px !important;
+}
+
+.card-product:not(.card-product--plp) .card-product__overlay-content,
+.card-product:not(.card-product--plp).card-product__layout--standard .card-product__overlay-content {
+  inset-block-start: 0 !important;
+  inset-block-end: auto !important;
+  inset-inline-start: 0 !important;
+  inset-inline-end: auto !important;
+  width: auto;
+  justify-content: flex-start;
+}
+
+.card-product:not(.card-product--plp) .marquee-tags {
+  position: absolute !important;
+  top: 12px !important;
+  left: 12px !important;
+  right: auto !important;
+  bottom: auto !important;
+  inset-block-start: 12px !important;
+  inset-inline-start: 12px !important;
+  inset-block-end: auto !important;
+  inset-inline-end: auto !important;
+  margin: 0 !important;
+  width: auto;
+  max-width: calc(100% - 48px);
+  text-align: start;
+  z-index: 3;
 }
