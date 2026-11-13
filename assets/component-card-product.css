@@ -546,3 +546,71 @@ input:disabled + .card-product__swatch {
   text-align: start;
   z-index: 3;
 }
+
+.section--product-recommendations .card-product__sizes,
+.section--recently-viewed-products .card-product__sizes {
+  inset-block-end: 1.2rem;
+  inset-inline-end: 1.2rem;
+  inset-inline-start: auto;
+  width: auto;
+  margin: 0;
+  text-align: end;
+}
+
+.section--product-recommendations .card-product__sizes-content,
+.section--recently-viewed-products .card-product__sizes-content {
+  display: none !important;
+}
+
+.section--product-recommendations .card-product__sizes-btn-toggle.quick-cart-modal__trigger,
+.section--recently-viewed-products .card-product__sizes-btn-toggle.quick-cart-modal__trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  min-width: 3rem;
+  min-height: 3rem;
+  padding: 0.8rem;
+  background-color: #fff;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.section--product-recommendations .card-product__sizes-btn-toggle svg,
+.section--recently-viewed-products .card-product__sizes-btn-toggle svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+@media screen and (min-width: 750px) {
+  .section--product-recommendations .card-product__sizes,
+  .section--recently-viewed-products .card-product__sizes {
+    inset-block-end: 1.3rem;
+    inset-inline-end: 1.3rem;
+    margin: 0;
+    transform: none;
+  }
+}
+
+@media screen and (min-width: 750px) and (hover: hover) {
+  .section--product-recommendations .card-product__sizes-btn-toggle.quick-cart-modal__trigger,
+  .section--recently-viewed-products .card-product__sizes-btn-toggle.quick-cart-modal__trigger {
+    display: inline-flex;
+  }
+
+  .section--product-recommendations .card-product__sizes,
+  .section--recently-viewed-products .card-product__sizes {
+    visibility: hidden;
+    opacity: 0;
+    transform: none;
+  }
+
+  .section--product-recommendations .card-product:hover .card-product__sizes,
+  .section--recently-viewed-products .card-product:hover .card-product__sizes {
+    visibility: visible;
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -14,6 +14,7 @@
 {%- assign hide_actions = hide_actions | default: false -%}
 {%- assign image_per_view = image_per_view | default: 4 -%}
 {%- assign plp_card = plp_card | default: false -%}
+{%- assign quick_modal_card = quick_modal_card | default: false -%}
 {%- capture card_id -%}
   {{- product_ref.id -}}-{{- section_id -}}-{{- card_index -}}
 {%- endcapture -%}
@@ -467,7 +468,7 @@
   {%- endif -%}
 {%- endunless -%}
 
-{%- if plp_card -%}
+{%- if plp_card or quick_modal_card -%}
   {%- capture quick_add_to_cart_button_html -%}
     <div class="card-product__sizes svg-color-inherit no-js-hidden">
       <button

@@ -22,6 +22,7 @@
   assign section_name = section_name | default: 'products-feed'
   assign section_blocks = section_blocks | default: nil
   assign product_list = section.settings.products
+  assign quick_modal_card = quick_modal_card | default: false
 -%}
 
 {%- if products_array != nil or url or product_list != nil -%}
@@ -156,7 +157,7 @@
 
                         {%- for product in products_array limit: section.settings.max_products -%}
                           <div class="swiper-slide card-product-slider__slide">
-                            {%- render 'card-product', product_ref: product, section_id: section_block_id, card_index: forloop.index, card_product_layout: settings.card_product_layout, image_per_view: 4 -%}
+                            {%- render 'card-product', product_ref: product, section_id: section_block_id, card_index: forloop.index, card_product_layout: settings.card_product_layout, image_per_view: 4, quick_modal_card: quick_modal_card -%}
                           </div>
                         {%- endfor -%}
                       {%- endif -%}
@@ -200,7 +201,7 @@
 
                   {%- for product in products_array limit: products_limit -%}
                     <div class="swiper-slide card-product-slider__slide">
-                      {%- render 'card-product', product_ref: product, section_id: section.id, card_index: forloop.index, card_product_layout: settings.card_product_layout, image_per_view: 4 -%}
+                      {%- render 'card-product', product_ref: product, section_id: section.id, card_index: forloop.index, card_product_layout: settings.card_product_layout, image_per_view: 4, quick_modal_card: quick_modal_card -%}
                     </div>
                   {%- endfor -%}
                 {%- endif -%}
