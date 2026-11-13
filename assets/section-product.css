@@ -2445,9 +2445,16 @@ section .product__gallery-breadcrumbs.breadcrumbs {
   margin-top: 0;
 }
 
-.product.js-product .product__grid__item--content king-linked-options-product,
-.product.js-product .product__grid__item--content .lv-option-box {
+.product.js-product king-linked-options-product,
+.product.js-product .lv-option-box,
+.product__content king-linked-options-product,
+.product__content .lv-option-box {
   display: none !important;
+  border: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 .product__content .product-options.product-colour-swatches,
@@ -2629,14 +2636,17 @@ section .product__gallery-breadcrumbs.breadcrumbs {
 }
 
 .product__content .product-options--size {
+  border: 0;
   border-top: 1px solid rgb(2 2 2 / 0.14);
   margin-top: 20px;
   padding-top: 20px;
 }
 
+.product__content:has(.product-colour-swatches) .product-options--size,
 .product__content .product-colour-swatches + product-selector .product-options--size,
 .product__content .product-colour-swatches + .product-info-divider + product-selector .product-options--size,
 .product__content .product-options--colour + .product-options--size {
+  border: 0;
   border-top: 0;
   margin-top: 0;
   padding-top: 0;

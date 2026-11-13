@@ -1,15 +1,18 @@
 {%- comment -%}
-  Model name used to keep sibling colours together.
-  Strips a trailing colour from the product title.
+  Base model name for sibling colours.
+  Uses the title before " - " when present, then strips a trailing colour.
   Accepts: title {String}
 {%- endcomment -%}
 {%- liquid
   assign model_key = title | downcase | replace: '–', '-' | replace: '—', '-' | strip
   for space_pass in (1..3)
-    assign model_key = model_key | replace: ' - ', ' ' | replace: '  ', ' '
+    assign model_key = model_key | replace: '  ', ' '
   endfor
-  assign model_key = model_key | strip
-  assign colour_suffixes = 'blue black wash|raw denim|dark blue|light blue|ice blue|stone blue|sky blue|dark grey|light grey|olive khaki|olive grey|soft sand|stone beige|washed grey|black|white|beige|khaki|ecru|navy|sand|grey|gray|stone|olive' | split: '|'
+  if model_key contains ' - '
+    assign model_key = model_key | split: ' - ' | first | strip
+  endif
+
+  assign colour_suffixes = 'washed black|vintage blue|blue black wash|raw denim|dark blue|light blue|ice blue|stone blue|sky blue|dark grey|light grey|olive khaki|olive grey|soft sand|stone beige|washed grey|dark green|light green|black|white|beige|khaki|ecru|cream|brown|green|navy|sand|grey|gray|stone|olive|blue|red' | split: '|'
 
   for strip_pass in (1..3)
     assign colour_stripped = false
