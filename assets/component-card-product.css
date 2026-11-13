@@ -540,8 +540,9 @@ input:disabled + .card-product__swatch {
   inset-block-end: auto !important;
   inset-inline-end: auto !important;
   margin: 0 !important;
-  width: auto;
-  max-width: calc(100% - 48px);
+  width: max-content !important;
+  max-width: none !important;
+  white-space: nowrap;
   text-align: start;
   z-index: 3;
 }
