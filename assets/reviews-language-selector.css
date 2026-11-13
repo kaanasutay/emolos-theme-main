@@ -221,6 +221,16 @@
     display: block;
   }
   
+  .shopify-section:has(#looxReviews .reviews-lang-bar) {
+    padding-top: 36px;
+  }
+
+  @media screen and (min-width: 990px) {
+    .shopify-section:has(#looxReviews .reviews-lang-bar) {
+      padding-top: 64px;
+    }
+  }
+
   @media screen and (max-width: 749px) {
     .reviews-lang-bar {
       margin-bottom: 1.2rem;
