@@ -12,25 +12,22 @@
     assign model_key = model_key | split: ' - ' | first | strip
   endif
 
+  assign keep_ripped = false
+  assign ripped_probe = model_key | append: '|'
+  if ripped_probe contains ' ripped|'
+    assign model_key = ripped_probe | split: ' ripped|' | first | strip
+    assign keep_ripped = true
+  endif
+
   assign colour_suffixes = 'washed black|vintage blue|blue black wash|raw denim|dark blue|light blue|ice blue|stone blue|sky blue|dark grey|light grey|olive khaki|olive grey|soft sand|stone beige|washed grey|dark green|light green|black|white|beige|khaki|ecru|cream|brown|green|navy|sand|grey|gray|stone|olive|blue|red' | split: '|'
 
   for strip_pass in (1..3)
     assign colour_stripped = false
+    assign model_probe = model_key | append: '|'
     for suffix in colour_suffixes
-      assign suffix_marker = ' ' | append: suffix
-      assign title_parts = model_key | split: suffix_marker
-      assign title_tail = title_parts | last
-      if title_parts.size > 1 and title_tail == blank
-        assign model_key = ''
-        for title_part in title_parts
-          if title_part != blank
-            if model_key != blank
-              assign model_key = model_key | append: suffix_marker
-            endif
-            assign model_key = model_key | append: title_part
-          endif
-        endfor
-        assign model_key = model_key | strip
+      assign end_token = ' ' | append: suffix | append: '|'
+      if model_probe contains end_token
+        assign model_key = model_probe | split: end_token | first | strip
         assign colour_stripped = true
         break
       endif
@@ -39,6 +36,10 @@
       break
     endunless
   endfor
+
+  if keep_ripped
+    assign model_key = model_key | append: ' ripped'
+  endif
 
   echo model_key
 -%}
