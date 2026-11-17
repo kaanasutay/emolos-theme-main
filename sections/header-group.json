@@ -17,7 +17,7 @@
         "welcome-slide": {
           "type": "text-slide",
           "settings": {
-            "content": "<p><strong>WELCOME TO OUR STORE</strong></p>",
+            "content": "<p><strong>BLACK FRIDAY SALE - UP TO 65% OFF</strong></p>",
             "dropdown_cards": false,
             "color_scheme": "",
             "card_item_1__title": "",
