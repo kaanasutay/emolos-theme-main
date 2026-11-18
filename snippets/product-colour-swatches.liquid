@@ -25,13 +25,36 @@
 
   assign colour_collection_handle = ''
   assign colour_match_best = 0
+  assign king_count = 0
+  assign king_products = nil
+  assign king_group = product.metafields['app--20802568193--king-linked-options'].group.value
+  if king_group != blank
+    assign king_field = king_group.value
+    assign king_payload = king_field.value | default: king_field
+    if king_payload.products == blank
+      assign king_payload = king_payload | parse_json
+    endif
+    if king_payload.products != blank
+      assign king_products = king_payload.products
+      for king_item in king_products
+        if king_item.published == false or king_item.handle == blank
+          continue
+        endif
+        assign king_status = king_item.status | append: ''
+        if king_status != blank and king_status != '1'
+          continue
+        endif
+        assign king_count = king_count | plus: 1
+      endfor
+    endif
+  endif
 -%}
 {%- capture product_model_key -%}
   {%- render 'product-colour-model', title: product.title -%}
 {%- endcapture -%}
 {%- assign product_model_key = product_model_key | strip -%}
 
-{%- if has_colour_option == false and product_model_key != blank -%}
+{%- if king_count < 2 and has_colour_option == false and product_model_key != blank -%}
   {%- for collection in product.collections -%}
     {%- assign colour_match_count = 0 -%}
     {%- for colour_product in collection.products -%}
@@ -52,7 +75,42 @@
 
 {%- unless has_colour_option -%}
   {%- capture colour_items -%}
-    {%- if colour_list != blank -%}
+    {%- if king_count > 1 -%}
+      {%- for king_item in king_products -%}
+        {%- if king_item.published == false or king_item.handle == blank -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- assign king_status = king_item.status | append: '' -%}
+        {%- if king_status != blank and king_status != '1' -%}
+          {%- continue -%}
+        {%- endif -%}
+        {%- assign colour_product = all_products[king_item.handle] -%}
+        {%- if colour_product.id != blank and colour_product.featured_image -%}
+          <a
+            href="{{ colour_product.url }}"
+            class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
+            title="{{ colour_product.title | escape }}"
+          >
+            <span class="media">
+              {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
+            </span>
+          </a>
+        {%- else -%}
+          {%- assign king_image = king_item.first_image | default: king_item.image -%}
+          {%- if king_image != blank -%}
+            <a
+              href="/products/{{ king_item.handle }}"
+              class="product-colour-swatches__item{% if king_item.handle == product.handle %} is-active{% endif %}"
+              title="{{ king_item.value | escape }}"
+            >
+              <span class="media">
+                <img src="{{ king_image }}" alt="{{ king_item.value | escape }}" width="120" height="150" loading="lazy">
+              </span>
+            </a>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- elsif colour_list != blank -%}
       {%- for colour_product in colour_list -%}
         {%- capture candidate_model_key -%}
           {%- render 'product-colour-model', title: colour_product.title -%}
@@ -99,7 +157,7 @@
   {%- endif -%}
 
   {%- if colour_item_count > 1 -%}
-    <fieldset class="product-options product-options--colour product-colour-swatches" data-colour-model="{{ product_model_key | escape }}">
+    <fieldset class="product-options product-options--colour product-colour-swatches" data-colour-model="{{ product_model_key | escape }}"{% if king_count > 1 %} data-colour-source="king"{% endif %}>
       <legend class="product-selector__label">COLOUR</legend>
       <div class="product-options__value-list">
         <div class="product-colour-swatches__list">

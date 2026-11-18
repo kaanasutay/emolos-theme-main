@@ -41,5 +41,12 @@
     assign model_key = model_key | append: ' ripped'
   endif
 
+  if model_key == 'carpenter jeans'
+    assign model_key = 'carpenter denim'
+  endif
+  if model_key == 'slim fit denim shorts'
+    assign model_key = 'denim shorts'
+  endif
+
   echo model_key
 -%}
