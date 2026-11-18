@@ -4,15 +4,6 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign delivery_html = ''
-  if pages.shipping != empty and pages.shipping.content != blank
-    assign delivery_html = pages.shipping.content
-  elsif pages.delivery != empty and pages.delivery.content != blank
-    assign delivery_html = pages.delivery.content
-  elsif shop.shipping_policy != blank and shop.shipping_policy.body != blank
-    assign delivery_html = shop.shipping_policy.body
-  endif
-
   assign returns_html = ''
   if pages.returns != empty and pages.returns.content != blank
     assign returns_html = pages.returns.content
@@ -20,46 +11,9 @@
     assign returns_html = shop.refund_policy.body
   endif
 
-  assign delivery_policy_url = '/policies/shipping-policy'
-  if shop.shipping_policy != blank and shop.shipping_policy.url != blank
-    assign delivery_policy_url = shop.shipping_policy.url
-  endif
-
   assign returns_policy_url = '/policies/refund-policy'
   if shop.refund_policy != blank and shop.refund_policy.url != blank
     assign returns_policy_url = shop.refund_policy.url
-  endif
-
-  assign delivery_visible = delivery_html
-  if delivery_visible contains '<h3'
-    assign delivery_visible = delivery_visible | split: '<h3' | first
-  endif
-  if delivery_visible contains 'Taxes &amp; Duties'
-    assign delivery_visible = delivery_visible | split: 'Taxes &amp; Duties' | first
-  elsif delivery_visible contains 'Taxes & Duties'
-    assign delivery_visible = delivery_visible | split: 'Taxes & Duties' | first
-  endif
-  if delivery_visible contains 'Important Notice'
-    assign delivery_visible = delivery_visible | split: 'Important Notice' | first
-  endif
-  if delivery_html != blank and delivery_visible != delivery_html
-    assign delivery_parts = delivery_visible | split: '<p'
-    assign delivery_visible = ''
-    for delivery_part in delivery_parts
-      assign delivery_keep = true
-      if forloop.last
-        unless delivery_part contains '</p>'
-          assign delivery_keep = false
-        endunless
-      endif
-      if delivery_keep
-        if forloop.first
-          assign delivery_visible = delivery_part
-        else
-          assign delivery_visible = delivery_visible | append: '<p' | append: delivery_part
-        endif
-      endif
-    endfor
   endif
 
   assign returns_visible = returns_html
@@ -162,12 +116,22 @@
       </summary>
       <div class="accordion__body" id="Details-Content-delivery-{{ section.id }}">
         <div class="accordion__body-inner rte">
-          {%- if delivery_visible != blank -%}
-            {{- delivery_visible -}}
+          {%- if product.metafields.custom.delivery.value != blank -%}
+            {{- product.metafields.custom.delivery | metafield_tag -}}
           {%- else -%}
-            <p>{{- 'products.product.delivery_fallback' | t -}}</p>
+            <p><strong>United Kingdom:</strong></p>
+            <p>£4 Standard Delivery (Royal Mail 1-3 business days) Free for orders over £80</p>
+            <p><strong>Europe:</strong><br>Standard Delivery: £8.50 • Royal Mail • 3–4 Business Days (Taxes Included for Orders up to €150 • No Surprise Fees on Delivery)</p>
+            <p>Free Delivery on Orders Over £100</p>
+            <p><strong>United States:</strong><br>Standard Shipping: £14 • 3–5 Business Days Taxes &amp; Duties Included • No Surprise Fees on Delivery</p>
+            <p><strong>Canada:</strong></p>
+            <p>Standard shipping: £14 (3–5 business days)</p>
+            <p><strong>Other International Countries :</strong></p>
+            <p>Standard shipping: £17 (6–8 business days)</p>
+            <ul>
+              <li>For details, visit our <a href="/policies/shipping-policy">Shipping Policy</a>.</li>
+            </ul>
           {%- endif -%}
-          <p class="product-info-tabs__policy-link">For more details, please visit our <a href="{{ delivery_policy_url }}">Delivery Policy</a>.</p>
         </div>
       </div>
     </details>

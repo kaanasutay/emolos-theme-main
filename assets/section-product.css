@@ -3126,7 +3126,8 @@ html.js .product-info-tabs .accordion__section.default-active .accordion__body {
   margin-top: 12px;
 }
 
-.product-info-tabs .product-info-tabs__policy-link a {
+.product-info-tabs .product-info-tabs__policy-link a,
+.product-info-tabs [id^="Details-Content-delivery"] a {
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 2px;
