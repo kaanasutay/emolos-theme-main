@@ -19,7 +19,7 @@
     assign keep_ripped = true
   endif
 
-  assign colour_suffixes = 'washed black|vintage blue|blue black wash|raw denim|dark blue|light blue|ice blue|stone blue|sky blue|dark grey|light grey|olive khaki|olive grey|soft sand|stone beige|washed grey|dark green|light green|black|white|beige|khaki|ecru|cream|brown|green|navy|sand|grey|gray|stone|olive|blue|red' | split: '|'
+  assign colour_suffixes = 'washed raw denim|blue black wash|washed black|washed grey|vintage blue|raw denim|dark blue|light blue|ice blue|stone blue|sky blue|dark grey|light grey|soft grey|olive khaki|olive grey|soft sand|stone beige|dark green|light green|black|white|beige|khaki|ecru|cream|brown|green|navy|sand|grey|gray|stone|olive|blue|red|washed|wash' | split: '|'
 
   for strip_pass in (1..3)
     assign colour_stripped = false

@@ -31,7 +31,7 @@
 {%- endcapture -%}
 {%- assign product_model_key = product_model_key | strip -%}
 
-{%- if colour_list == blank and has_colour_option == false and product_model_key != blank -%}
+{%- if has_colour_option == false and product_model_key != blank -%}
   {%- for collection in product.collections -%}
     {%- assign colour_match_count = 0 -%}
     {%- for colour_product in collection.products -%}
@@ -43,7 +43,7 @@
         {%- assign colour_match_count = colour_match_count | plus: 1 -%}
       {%- endif -%}
     {%- endfor -%}
-    {%- if colour_match_count > colour_match_best and colour_match_count < 16 -%}
+    {%- if colour_match_count > colour_match_best -%}
       {%- assign colour_match_best = colour_match_count -%}
       {%- assign colour_collection_handle = collection.handle -%}
     {%- endif -%}
@@ -74,7 +74,7 @@
   {%- endcapture -%}
 
   {%- assign colour_item_count = colour_items | split: 'product-colour-swatches__item' | size | minus: 1 -%}
-  {%- if colour_item_count < 2 and colour_collection_handle != blank and colour_match_best > 1 -%}
+  {%- if colour_collection_handle != blank and colour_match_best > colour_item_count and colour_match_best > 1 -%}
     {%- capture colour_items -%}
       {%- assign colour_collection = collections[colour_collection_handle] -%}
       {%- for colour_product in colour_collection.products -%}
