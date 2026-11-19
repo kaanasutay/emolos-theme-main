@@ -73,6 +73,23 @@ if (!customElements.get('quick-cart-modal')) {
         });
       };
 
+      if (!window.emolosQuickAddCapture) {
+        window.emolosQuickAddCapture = true;
+        document.addEventListener('click', (event) => {
+          const trigger = event.target.closest('.quick-cart-modal__trigger');
+          if (!trigger || trigger.dataset.directVariant) return;
+          const modal = document.querySelector('quick-cart-modal');
+          if (!modal || typeof modal.fetchProductForQuickCartModal !== 'function') return;
+          event.preventDefault();
+          event.stopPropagation();
+          modal.fetchProductForQuickCartModal({
+            currentTarget: trigger,
+            preventDefault() {},
+            stopPropagation() {}
+          });
+        }, true);
+      }
+
       // Initialize existing triggers on page load
       attachTriggers();
 
@@ -103,12 +120,14 @@ if (!customElements.get('quick-cart-modal')) {
 
       const productCard = trigger.closest('product-card');
       let productOptions = null;
+      let quickAddLoaded = false;
 
       if (!skipOptionSync) {
         if (!productCard) return;
         productOptions = productCard.querySelectorAll('input[type="radio"]:checked, select');
       }
-      trigger.classList.toggle('is--loading');
+      if (trigger.classList.contains('is--loading')) return;
+      trigger.classList.add('is--loading');
       try {
         let fetchPrefix = '';
         if (window.Shopify.routes.root.includes(`/${window.Shopify.locale}/`)) {
@@ -145,10 +164,12 @@ if (!customElements.get('quick-cart-modal')) {
         closeButtons.forEach(closeButton => {
           closeButton.addEventListener('click', this.close.bind(this));
         });
+        quickAddLoaded = true;
       } catch (error) {
         // console.log(error);
       } finally {
-        trigger.classList.toggle('is--loading');
+        trigger.classList.remove('is--loading');
+        if (!quickAddLoaded) return;
 
         if (!skipOptionSync) {
           productOptions.forEach(productOption => {

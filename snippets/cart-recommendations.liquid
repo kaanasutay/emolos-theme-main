@@ -5,6 +5,7 @@
   assign want_jacket = false
   assign want_hoodie = false
   assign want_jogger = false
+  assign has_top = false
   assign cart_product_ids = '|'
 
   for item in cart.items
@@ -14,31 +15,48 @@
     assign type_key = item.product.type | downcase
     assign tag_text = item.product.tags | join: ' ' | downcase
     assign blob = title_key | append: ' ' | append: handle_key | append: ' ' | append: type_key | append: ' ' | append: tag_text
+    assign matched_rule = false
 
     if blob contains 'short'
       assign want_modal = true
+      assign matched_rule = true
     elsif blob contains 'distressed' or blob contains 'jacquard'
       assign want_modal = true
       assign want_jogger = true
+      assign matched_rule = true
     elsif blob contains 'hoodie'
       assign want_jogger = true
+      assign matched_rule = true
     elsif blob contains 'jogger' or blob contains 'sweatpant'
       assign want_hoodie = true
+      assign matched_rule = true
     elsif blob contains 'chino'
       assign want_polo = true
+      assign matched_rule = true
     elsif blob contains 'cargo pant' or blob contains 'cargo-pant'
       assign want_oversized = true
+      assign matched_rule = true
     elsif blob contains 'relaxed'
       assign want_oversized = true
+      assign matched_rule = true
     elsif blob contains 'carpenter'
       assign want_oversized = true
+      assign matched_rule = true
     elsif blob contains 'slim fit jean' or blob contains 'slim-fit-jean'
       assign want_modal = true
       assign want_jacket = true
+      assign matched_rule = true
     elsif blob contains 'spray'
       assign want_modal = true
       assign want_jacket = true
+      assign matched_rule = true
     endif
+
+    unless matched_rule
+      if blob contains 't-shirt' or blob contains 'tshirt' or blob contains 'tee shirt' or blob contains 'polo'
+        assign has_top = true
+      endif
+    endunless
   endfor
 
   assign outfit_plan = ''
@@ -61,7 +79,12 @@
     assign outfit_plan = outfit_plan | append: 'jogger|'
   endif
 
-  assign outfit_fallback = 'oversized|polo|modal|jacket|hoodie|jogger|'
+  assign outfit_fallback = 'cargo|relaxed|carpenter|chino|slim|spray|shorts|jogger|'
+  assign outfit_group_cap = 12
+  if outfit_plan == blank
+    assign outfit_plan = outfit_fallback
+    assign outfit_group_cap = 2
+  endif
   assign shown_ids = cart_product_ids
   assign shown_count = 0
 -%}
@@ -77,6 +100,7 @@
         break
       else
         assign pass_plan = outfit_fallback
+        assign outfit_group_cap = 2
       endif
       assign outfit_groups = pass_plan | split: '|'
     -%}
@@ -86,6 +110,7 @@
       {%- endif -%}
       {%- liquid
         assign pool = blank
+        assign group_shown = 0
         case group
           when 'oversized', 'modal'
             assign pool = collections['essential-t-shirt-men'].products
@@ -97,10 +122,24 @@
             assign pool = collections['hoodies'].products
           when 'jogger'
             assign pool = collections['joggers'].products
+          when 'cargo'
+            assign pool = collections['cargo-pants-for-men'].products
+          when 'relaxed'
+            assign pool = collections['relaxed-fit-jeans'].products
+          when 'carpenter'
+            assign pool = collections['carpenter-jeans-men'].products
+          when 'chino'
+            assign pool = collections['chino-pants'].products
+          when 'slim'
+            assign pool = collections['slim-fit-jeans'].products
+          when 'spray'
+            assign pool = collections['spray-on-jeans'].products
+          when 'shorts'
+            assign pool = collections['mens-denim-shorts'].products
         endcase
       -%}
       {%- for outfit_product in pool -%}
-        {%- if shown_count >= 12 -%}
+        {%- if shown_count >= 12 or group_shown >= outfit_group_cap -%}
           {%- break -%}
         {%- endif -%}
         {%- liquid
@@ -135,6 +174,36 @@
               if outfit_title contains 'jogger' or outfit_title contains 'sweatpant'
                 assign include_product = true
               endif
+            when 'cargo'
+              if outfit_title contains 'cargo pant'
+                assign include_product = true
+              endif
+            when 'relaxed'
+              if outfit_title contains 'relaxed'
+                assign include_product = true
+              endif
+            when 'carpenter'
+              if outfit_title contains 'carpenter'
+                unless outfit_title contains 'short'
+                  assign include_product = true
+                endunless
+              endif
+            when 'chino'
+              if outfit_title contains 'chino'
+                assign include_product = true
+              endif
+            when 'slim'
+              if outfit_title contains 'slim fit jean'
+                assign include_product = true
+              endif
+            when 'spray'
+              if outfit_title contains 'spray'
+                assign include_product = true
+              endif
+            when 'shorts'
+              if outfit_title contains 'short'
+                assign include_product = true
+              endif
           endcase
           assign product_token = '|' | append: outfit_product.id | append: '|'
         -%}
@@ -143,6 +212,7 @@
           {%- render 'cart-recommendation-card', recommendation: outfit_product -%}
           {%- liquid
             assign shown_count = shown_count | plus: 1
+            assign group_shown = group_shown | plus: 1
             assign shown_ids = shown_ids | append: outfit_product.id | append: '|'
           -%}
           {%- endunless -%}
