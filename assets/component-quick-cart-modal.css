@@ -1901,6 +1901,34 @@ quick-cart-modal .product-options--size legend {
   }
 }
 
+@media screen and (min-width: 750px) {
+  quick-cart-modal .quick-cart-product-modal > .button--close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.7rem;
+    height: 3.7rem;
+    padding: 0;
+    overflow: hidden;
+    color: #111111;
+    background-color: #ffffff;
+  }
+
+  quick-cart-modal .quick-cart-product-modal > .button--close svg {
+    display: block;
+    width: 1.4rem !important;
+    height: 1.4rem !important;
+    flex: 0 0 1.4rem;
+    color: #111111;
+  }
+
+  quick-cart-modal .quick-cart-product-modal > .button--close svg path {
+    stroke: #111111 !important;
+    stroke-width: 2px !important;
+    fill: none !important;
+  }
+}
+
 dialog.product-size-guide-modal[id^="SizeGuide-modal-"] .product-size-guide-modal__window {
   position: relative;
 }
