@@ -1,3 +1,38 @@
+window.emolosOpenCartQuickAdd = function (button, event) {
+  if (!button || button.dataset.quickAddBusy === '1') return;
+  button.dataset.quickAddBusy = '1';
+  window.setTimeout(() => {
+    delete button.dataset.quickAddBusy;
+  }, 600);
+
+  if (button.dataset.directVariant) {
+    const host = button.closest('cart-recommendations');
+    if (host && typeof host.addDirect === 'function') host.addDirect(button);
+    return;
+  }
+
+  const modal = document.querySelector('quick-cart-modal');
+  if (!modal || typeof modal.fetchProductForQuickCartModal !== 'function') return;
+  modal.fetchProductForQuickCartModal({
+    currentTarget: button,
+    preventDefault() {},
+    stopPropagation() {}
+  });
+};
+
+if (!window.emolosCartQuickAddBound) {
+  window.emolosCartQuickAddBound = true;
+  const openCartQuickAdd = (event) => {
+    const button = event.target.closest('.cart-recommendations__add');
+    if (!button) return;
+    event.preventDefault();
+    event.stopPropagation();
+    window.emolosOpenCartQuickAdd(button, event);
+  };
+  document.addEventListener('pointerup', openCartQuickAdd, true);
+  document.addEventListener('click', openCartQuickAdd, true);
+}
+
 class CartRecommendations extends HTMLElement {
   constructor() {
     super();
@@ -127,6 +162,11 @@ class CartRecommendations extends HTMLElement {
       slidesPerView: 2.05,
       spaceBetween: 16,
       watchOverflow: true,
+      preventClicks: false,
+      preventClicksPropagation: false,
+      touchStartPreventDefault: false,
+      noSwiping: true,
+      noSwipingSelector: '.cart-recommendations__add, .swiper-no-swiping',
       breakpoints: {
         750: {
           slidesPerView: 2.15,

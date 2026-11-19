@@ -77,7 +77,7 @@ if (!customElements.get('quick-cart-modal')) {
         window.emolosQuickAddCapture = true;
         document.addEventListener('click', (event) => {
           const trigger = event.target.closest('.quick-cart-modal__trigger');
-          if (!trigger || trigger.dataset.directVariant) return;
+          if (!trigger || trigger.dataset.directVariant || trigger.classList.contains('cart-recommendations__add')) return;
           const modal = document.querySelector('quick-cart-modal');
           if (!modal || typeof modal.fetchProductForQuickCartModal !== 'function') return;
           event.preventDefault();
