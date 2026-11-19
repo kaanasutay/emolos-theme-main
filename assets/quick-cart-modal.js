@@ -116,7 +116,8 @@ if (!customElements.get('quick-cart-modal')) {
 
       const isRecommendations = trigger.classList.contains('quick-cart-modal__trigger--recommendations');
       const isPlpCard = !!trigger.closest('card-product');
-      const skipOptionSync = isRecommendations || isPlpCard;
+      const isCartSuggestion = trigger.classList.contains('cart-recommendations__add');
+      const skipOptionSync = isRecommendations || isPlpCard || isCartSuggestion;
 
       const productCard = trigger.closest('product-card');
       let productOptions = null;
