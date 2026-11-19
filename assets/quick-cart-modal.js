@@ -512,12 +512,13 @@ if (!customElements.get('quick-cart-modal')) {
     close() {
       this.toggleState = false;
 
+      const cartDrawerOpen = document.querySelector('cart-drawer.is-visible');
       const shopTheLookDrawer = document.querySelector('shop-the-look-drawer');
 
-      if (shopTheLookDrawer && !shopTheLookDrawer.classList.contains('is--open')) {
+      if (!cartDrawerOpen && shopTheLookDrawer && !shopTheLookDrawer.classList.contains('is--open')) {
         document.querySelector('body').classList.remove('overflow-hidden');
       }
-      if (!shopTheLookDrawer) {
+      if (!cartDrawerOpen && !shopTheLookDrawer) {
         document.querySelector('body').classList.remove('overflow-hidden');
       }
       this.classList.remove('is--open');

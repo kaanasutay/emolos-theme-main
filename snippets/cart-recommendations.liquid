@@ -1,5 +1,160 @@
+{%- liquid
+  assign want_oversized = false
+  assign want_polo = false
+  assign want_modal = false
+  assign want_jacket = false
+  assign want_hoodie = false
+  assign want_jogger = false
+  assign cart_product_ids = '|'
+
+  for item in cart.items
+    assign cart_product_ids = cart_product_ids | append: item.product_id | append: '|'
+    assign title_key = item.product.title | downcase
+    assign handle_key = item.product.handle | downcase
+    assign type_key = item.product.type | downcase
+    assign tag_text = item.product.tags | join: ' ' | downcase
+    assign blob = title_key | append: ' ' | append: handle_key | append: ' ' | append: type_key | append: ' ' | append: tag_text
+
+    if blob contains 'short'
+      assign want_modal = true
+    elsif blob contains 'distressed' or blob contains 'jacquard'
+      assign want_modal = true
+      assign want_jogger = true
+    elsif blob contains 'hoodie'
+      assign want_jogger = true
+    elsif blob contains 'jogger' or blob contains 'sweatpant'
+      assign want_hoodie = true
+    elsif blob contains 'chino'
+      assign want_polo = true
+    elsif blob contains 'cargo pant' or blob contains 'cargo-pant'
+      assign want_oversized = true
+    elsif blob contains 'relaxed'
+      assign want_oversized = true
+    elsif blob contains 'carpenter'
+      assign want_oversized = true
+    elsif blob contains 'slim fit jean' or blob contains 'slim-fit-jean'
+      assign want_modal = true
+      assign want_jacket = true
+    elsif blob contains 'spray'
+      assign want_modal = true
+      assign want_jacket = true
+    endif
+  endfor
+
+  assign outfit_plan = ''
+  if want_oversized
+    assign outfit_plan = outfit_plan | append: 'oversized|'
+  endif
+  if want_polo
+    assign outfit_plan = outfit_plan | append: 'polo|'
+  endif
+  if want_modal
+    assign outfit_plan = outfit_plan | append: 'modal|'
+  endif
+  if want_jacket
+    assign outfit_plan = outfit_plan | append: 'jacket|'
+  endif
+  if want_hoodie
+    assign outfit_plan = outfit_plan | append: 'hoodie|'
+  endif
+  if want_jogger
+    assign outfit_plan = outfit_plan | append: 'jogger|'
+  endif
+
+  assign outfit_fallback = 'oversized|polo|modal|jacket|hoodie|jogger|'
+  assign shown_ids = cart_product_ids
+  assign shown_count = 0
+-%}
+{%- capture outfit_items -%}
+  {%- for pass in (1..2) -%}
+    {%- liquid
+      if pass == 1
+        assign pass_plan = outfit_plan
+        if pass_plan == blank
+          assign pass_plan = outfit_fallback
+        endif
+      elsif shown_count > 0 or outfit_plan == blank
+        break
+      else
+        assign pass_plan = outfit_fallback
+      endif
+      assign outfit_groups = pass_plan | split: '|'
+    -%}
+    {%- for group in outfit_groups -%}
+      {%- if group == blank or shown_count >= 12 -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- liquid
+        assign pool = blank
+        case group
+          when 'oversized', 'modal'
+            assign pool = collections['essential-t-shirt-men'].products
+          when 'polo'
+            assign pool = collections['polo-shirt'].products
+          when 'jacket'
+            assign pool = collections['denim-jacket'].products
+          when 'hoodie'
+            assign pool = collections['hoodies'].products
+          when 'jogger'
+            assign pool = collections['joggers'].products
+        endcase
+      -%}
+      {%- for outfit_product in pool -%}
+        {%- if shown_count >= 12 -%}
+          {%- break -%}
+        {%- endif -%}
+        {%- liquid
+          assign include_product = false
+          assign outfit_title = outfit_product.title | downcase
+          case group
+            when 'oversized'
+              if outfit_title contains 'oversized'
+                assign include_product = true
+              endif
+            when 'modal'
+              if outfit_title contains 'modal' and outfit_title contains 't-shirt'
+                unless outfit_title contains 'long sleeve'
+                  assign include_product = true
+                endunless
+              endif
+            when 'polo'
+              if outfit_title contains 'polo'
+                assign include_product = true
+              endif
+            when 'jacket'
+              if outfit_title contains 'denim jacket'
+                unless outfit_title contains 'distressed' or outfit_title contains 'jacquard'
+                  assign include_product = true
+                endunless
+              endif
+            when 'hoodie'
+              if outfit_title contains 'hoodie'
+                assign include_product = true
+              endif
+            when 'jogger'
+              if outfit_title contains 'jogger' or outfit_title contains 'sweatpant'
+                assign include_product = true
+              endif
+          endcase
+          assign product_token = '|' | append: outfit_product.id | append: '|'
+        -%}
+        {%- if include_product and outfit_product.featured_image -%}
+          {%- unless shown_ids contains product_token -%}
+          {%- render 'cart-recommendation-card', recommendation: outfit_product -%}
+          {%- liquid
+            assign shown_count = shown_count | plus: 1
+            assign shown_ids = shown_ids | append: outfit_product.id | append: '|'
+          -%}
+          {%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- assign outfit_count = outfit_items | split: 'cart-recommendations__item-wrapper' | size | minus: 1 -%}
 <cart-recommendations
-  class="cart-recommendations hidden {{ class }}"
+  class="cart-recommendations {{ class }}{% if outfit_count < 1 %} hidden{% endif %}"
+  data-outfit="ready"
   data-url="{{- routes.product_recommendations_url -}}?section_id={{- section.id -}}&product_id={{- cart.items[0].product_id -}}&limit=8&intent=related"
 >
   <div class="cart-recommendations__head">
@@ -32,90 +187,7 @@
 
   <div class="cart-recommendations__body swiper">
     <div class="cart-recommendations__items swiper-wrapper" data-recommendations>
-      {%- if recommendations.performed and recommendations.products_count > 0 -%}
-        {%- for recommendation in recommendations.products -%}
-          {%- liquid
-            assign rec_price = recommendation.price_min | times: 1
-            assign rec_compare = recommendation.compare_at_price_min | times: 1
-            if rec_compare == 0
-              assign rec_compare = recommendation.compare_at_price | default: 0 | times: 1
-            endif
-            assign sale_percent = 0
-            if rec_compare > rec_price and rec_compare > 0
-              assign sale_percent = rec_compare | minus: rec_price | times: 100.0 | divided_by: rec_compare | round
-            endif
-
-            assign rating_value = 0
-            if recommendation.metafields.reviews.rating.value.rating != blank
-              assign rating_value = recommendation.metafields.reviews.rating.value.rating | plus: 0
-            elsif recommendation.metafields.loox.avg_rating != blank
-              assign rating_value = recommendation.metafields.loox.avg_rating | plus: 0
-            endif
-            assign rating_filled = rating_value | round
-            if rating_filled > 5
-              assign rating_filled = 5
-            endif
-
-            assign review_count = 0
-            if recommendation.metafields.loox.num_reviews != blank
-              assign review_count = recommendation.metafields.loox.num_reviews | plus: 0
-            elsif recommendation.metafields.reviews.rating_count != blank
-              assign review_count = recommendation.metafields.reviews.rating_count | plus: 0
-            endif
-          -%}
-          <div class="cart-recommendations__item-wrapper swiper-slide">
-            <a href="{{- recommendation.url -}}" class="cart-recommendations__item">
-                  {%- if recommendation.featured_image -%}
-                <div class="cart-recommendations__item-media">
-                  <div class="media">
-                    {%- render 'image', image: recommendation.featured_image, image_url_width: 400 -%}
-                  </div>
-                  {%- if rec_compare > rec_price -%}
-                    <span class="cart-recommendations__badge">
-                      {{- 'products.product.badges.percent_off' | t: percent: sale_percent -}}
-                    </span>
-                  {%- endif -%}
-                </div>
-              {%- endif -%}
-
-              <div class="cart-recommendations__item-details">
-                <h6 class="cart-recommendations__item-title">
-                  {{- recommendation.title | escape -}}
-                </h6>
-
-                <p class="cart-recommendations__item-price">
-                  {%- if rec_compare > rec_price -%}
-                    <span class="visually-hidden">{{- 'products.product.price.sale_price' | t -}}</span>
-                    <ins>{{- rec_price | money_without_trailing_zeros -}}</ins>
-                    <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
-                    <del>{{- rec_compare | money_without_trailing_zeros -}}</del>
-                    <span class="cart-recommendations__sale-label">{{- 'products.product.price.sale_badge' | t -}}</span>
-                  {%- else -%}
-                    {{- rec_price | money_without_trailing_zeros -}}
-                  {%- endif -%}
-                </p>
-
-                {%- if rating_value > 0 or review_count > 0 -%}
-                  <div class="cart-recommendations__rating" aria-label="{{- rating_value -}} / 5">
-                    {%- for i in (1..5) -%}
-                      <span class="cart-recommendations__star{% if i <= rating_filled %} is-filled{% endif %}" aria-hidden="true">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M6 0.8L7.35 4.35L11.2 4.65L8.3 7.2L9.15 11L6 9.05L2.85 11L3.7 7.2L0.8 4.65L4.65 4.35L6 0.8Z" fill="currentColor"></path>
-                        </svg>
-                      </span>
-                    {%- endfor -%}
-                    {%- if review_count > 0 -%}
-                      <span class="cart-recommendations__reviews">
-                        {{- 'products.product.reviews_count' | t: count: review_count -}}
-                      </span>
-                    {%- endif -%}
-                  </div>
-                {%- endif -%}
-              </div>
-            </a>
-          </div>
-        {%- endfor -%}
-      {%- endif -%}
+      {{- outfit_items -}}
     </div>
   </div>
 </cart-recommendations>

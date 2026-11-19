@@ -1,0 +1,108 @@
+{%- liquid
+  assign rec_price = recommendation.price_min | times: 1
+  assign rec_compare = recommendation.compare_at_price_min | times: 1
+  if rec_compare == 0
+    assign rec_compare = recommendation.compare_at_price | default: 0 | times: 1
+  endif
+  assign sale_percent = 0
+  if rec_compare > rec_price and rec_compare > 0
+    assign sale_percent = rec_compare | minus: rec_price | times: 100.0 | divided_by: rec_compare | round
+  endif
+
+  assign rating_value = 0
+  if recommendation.metafields.reviews.rating.value.rating != blank
+    assign rating_value = recommendation.metafields.reviews.rating.value.rating | plus: 0
+  elsif recommendation.metafields.loox.avg_rating != blank
+    assign rating_value = recommendation.metafields.loox.avg_rating | plus: 0
+  endif
+  assign rating_filled = rating_value | round
+  if rating_filled > 5
+    assign rating_filled = 5
+  endif
+
+  assign review_count = 0
+  if recommendation.metafields.loox.num_reviews != blank
+    assign review_count = recommendation.metafields.loox.num_reviews | plus: 0
+  elsif recommendation.metafields.reviews.rating_count != blank
+    assign review_count = recommendation.metafields.reviews.rating_count | plus: 0
+  endif
+
+  assign direct_variant_id = ''
+  if recommendation.variants.size < 2 and recommendation.selected_or_first_available_variant
+    assign direct_variant_id = recommendation.selected_or_first_available_variant.id
+  endif
+-%}
+<div class="cart-recommendations__item-wrapper swiper-slide">
+  <div class="cart-recommendations__item">
+    {%- if recommendation.featured_image -%}
+      <div class="cart-recommendations__item-media">
+        <a href="{{- recommendation.url -}}" class="cart-recommendations__item-link">
+          <div class="media">
+            {%- render 'image', image: recommendation.featured_image, image_url_width: 400 -%}
+          </div>
+          {%- if rec_compare > rec_price -%}
+            <span class="cart-recommendations__badge">
+              {{- 'products.product.badges.percent_off' | t: percent: sale_percent -}}
+            </span>
+          {%- endif -%}
+        </a>
+        <button
+          type="button"
+          class="cart-recommendations__add swiper-no-swiping{% if direct_variant_id == blank %} quick-cart-modal__trigger{% endif %}"
+          {% if direct_variant_id == blank %}
+            data-product-url="{{- recommendation.url -}}"
+            aria-controls="quick-cart-modal"
+            aria-expanded="false"
+          {% else %}
+            data-direct-variant="{{- direct_variant_id -}}"
+          {% endif %}
+          aria-label="{{- 'products.card-product.add_to_cart' | t -}}"
+        >
+          <span class="cart-recommendations__add-icon" aria-hidden="true">
+            {%- render 'icon', icon_name: 'theme-plus-button' -%}
+          </span>
+          <span class="cart-recommendations__add-done" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3.5 8.2L6.4 11.1L12.5 4.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </span>
+        </button>
+      </div>
+    {%- endif -%}
+
+    <a href="{{- recommendation.url -}}" class="cart-recommendations__item-details">
+      <h6 class="cart-recommendations__item-title">
+        {{- recommendation.title | escape -}}
+      </h6>
+
+      <p class="cart-recommendations__item-price">
+        {%- if rec_compare > rec_price -%}
+          <span class="visually-hidden">{{- 'products.product.price.sale_price' | t -}}</span>
+          <ins>{{- rec_price | money_without_trailing_zeros -}}</ins>
+          <span class="visually-hidden">{{- 'products.product.price.regular_price' | t -}}</span>
+          <del>{{- rec_compare | money_without_trailing_zeros -}}</del>
+          <span class="cart-recommendations__sale-label">{{- 'products.product.price.sale_badge' | t -}}</span>
+        {%- else -%}
+          {{- rec_price | money_without_trailing_zeros -}}
+        {%- endif -%}
+      </p>
+
+      {%- if rating_value > 0 or review_count > 0 -%}
+        <div class="cart-recommendations__rating" aria-label="{{- rating_value -}} / 5">
+          {%- for i in (1..5) -%}
+            <span class="cart-recommendations__star{% if i <= rating_filled %} is-filled{% endif %}" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 0.8L7.35 4.35L11.2 4.65L8.3 7.2L9.15 11L6 9.05L2.85 11L3.7 7.2L0.8 4.65L4.65 4.35L6 0.8Z" fill="currentColor"></path>
+              </svg>
+            </span>
+          {%- endfor -%}
+          {%- if review_count > 0 -%}
+            <span class="cart-recommendations__reviews">
+              {{- 'products.product.reviews_count' | t: count: review_count -}}
+            </span>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </a>
+  </div>
+</div>
