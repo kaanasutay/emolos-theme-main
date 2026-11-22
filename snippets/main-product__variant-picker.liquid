@@ -238,32 +238,43 @@
     </dialog>
     <script>
       (function () {
-        var dialog = document.getElementById('{{ size_guide_dialog_id }}');
-        if (!dialog || dialog.dataset.bound === 'true') return;
-        dialog.dataset.bound = 'true';
-        document.querySelectorAll('[aria-controls="{{ size_guide_dialog_id }}"]').forEach(function (btn) {
-          btn.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (dialog.parentElement !== document.body) document.body.appendChild(dialog);
-            if (typeof dialog.showModal === 'function') {
-              if (!dialog.open) dialog.showModal();
-            } else {
-              dialog.setAttribute('open', '');
-            }
-          });
-        });
-        dialog.querySelectorAll('.js-size-guide-close').forEach(function (btn) {
-          btn.addEventListener('click', function () {
-            if (typeof dialog.close === 'function') dialog.close();
-            else dialog.removeAttribute('open');
-          });
-        });
-        dialog.addEventListener('click', function (event) {
-          if (event.target === dialog) {
-            if (typeof dialog.close === 'function') dialog.close();
-            else dialog.removeAttribute('open');
+        if (window.emolosSizeGuideBound) return;
+        window.emolosSizeGuideBound = true;
+
+        function sizeGuideDialog(id) {
+          return id ? document.getElementById(id) : null;
+        }
+
+        function openSizeGuide(dialog) {
+          if (!dialog) return;
+          if (dialog.parentElement !== document.body) document.body.appendChild(dialog);
+          if (typeof dialog.showModal === 'function') {
+            if (!dialog.open) dialog.showModal();
+          } else if (!dialog.hasAttribute('open')) {
+            dialog.setAttribute('open', '');
           }
+        }
+
+        function closeSizeGuide(dialog) {
+          if (!dialog) return;
+          if (typeof dialog.close === 'function') dialog.close();
+          else dialog.removeAttribute('open');
+        }
+
+        document.addEventListener('click', function (event) {
+          var opener = event.target.closest('.js-size-guide-open');
+          if (opener && !opener.closest('quick-cart-modal')) {
+            var dialog = sizeGuideDialog(opener.getAttribute('aria-controls'));
+            if (!dialog) return;
+            event.preventDefault();
+            openSizeGuide(dialog);
+            return;
+          }
+
+          var openDialog = event.target.closest('dialog.product-size-guide-modal');
+          if (!openDialog || !openDialog.open) return;
+          var closeButton = event.target.closest('.js-size-guide-close, .product-size-guide-modal__close');
+          if (closeButton || event.target === openDialog) closeSizeGuide(openDialog);
         });
       })();
     </script>
