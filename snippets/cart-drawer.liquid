@@ -107,29 +107,17 @@
               method="post"
             >
               <div id="cart-summary">
+                {%- render 'cart-discount-summary' -%}
+
                 <div class="cart-drawer__summary-total">
                   <span>
                     {{- 'cart.subtotal' | t -}}:
                   </span>
 
                   <span>
-                    {{- cart.total_price | money_without_trailing_zeros -}}
+                    {%- render 'formatted-money', amount: cart.total_price -%}
                   </span>
                 </div>
-
-                {%- if cart.cart_level_discount_applications.size > 0 -%}
-                  <ul class="cart-drawer__summary-discounts list-unstyled" role="list" aria-label="{{- 'customer.order.discount' | t -}}">
-                    {%- for discount in cart.cart_level_discount_applications -%}
-                      <li>
-                        {% render 'icon', icon_name: 'option-price_tag' %}
-                        <span>
-                          {{ discount.title }}
-                          (-{{ discount.total_allocated_amount | money_without_trailing_zeros }})
-                        </span>
-                      </li>
-                    {%- endfor -%}
-                  </ul>
-                {%- endif -%}
 
                 <p class="cart-drawer__summary-tax">
                   {{- 'cart.shipping_and_discounts_at_checkout' | t -}}

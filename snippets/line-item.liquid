@@ -72,15 +72,17 @@
 
       <div class="cart-item__price">
         {% liquid
+          assign unit_compare = line_item.original_price
+          if line_item.variant.compare_at_price > unit_compare
+            assign unit_compare = line_item.variant.compare_at_price
+          endif
+
           if in_drawer
             assign display_price = line_item.final_price
-            assign display_compare = line_item.variant.compare_at_price | default: line_item.original_price
+            assign display_compare = unit_compare
           else
             assign display_price = line_item.final_line_price
-            assign display_compare = line_item.variant.compare_at_price | times: line_item.quantity
-            if line_item.line_level_total_discount > 0
-              assign display_compare = line_item.original_line_price
-            endif
+            assign display_compare = unit_compare | times: line_item.quantity
           endif
         %}
 
@@ -90,18 +92,18 @@
               {{- 'products.product.price.sale_price' | t -}}
             </span>
             <ins>
-              {{- display_price | money_without_trailing_zeros -}}
+              {%- render 'formatted-money', amount: display_price -%}
             </ins>
 
             <span class="visually-hidden">
               {{- 'products.product.price.regular_price' | t -}}
             </span>
             <del>
-              {{- display_compare | money_without_trailing_zeros -}}
+              {%- render 'formatted-money', amount: display_compare -%}
             </del>
           </div>
         {%- else -%}
-          {{- display_price | money_without_trailing_zeros -}}
+          {%- render 'formatted-money', amount: display_price -%}
         {%- endif -%}
 
         {%- if line_item.variant.available and line_item.unit_price_measurement -%}
@@ -123,15 +125,23 @@
       </div>
     </div>
 
-    {%- if line_item.discounts -%}
-      <ul class="cart-item__discounts list-unstyled" role="list" aria-label="{{- 'customer.order.discount' | t -}}">
-        {%- for discount in line_item.discounts -%}
+    {%- capture line_discount_rows -%}
+      {%- for allocation in line_item.line_level_discount_allocations -%}
+        {%- if allocation.amount > 0 -%}
           <li>
             {% render 'icon', icon_name: 'option-price_tag' %}
-
-            <span>{{- discount.title | escape -}}</span>
+            <span>
+              {{- allocation.discount_application.title | escape -}}
+              <span class="cart-item__discount-amount">(-{%- render 'formatted-money', amount: allocation.amount -%})</span>
+            </span>
           </li>
-        {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if line_discount_rows != blank -%}
+      <ul class="cart-item__discounts list-unstyled" role="list" aria-label="{{- 'customer.order.discount' | t -}}">
+        {{- line_discount_rows -}}
       </ul>
     {%- endif -%}
 

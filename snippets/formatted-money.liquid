@@ -1,0 +1,6 @@
+{%- comment -%}
+  Formats a money amount in cents.
+  Accepts:
+  - amount {Number}
+{%- endcomment -%}
+{{- amount | money_without_trailing_zeros | replace: ' GBP', '' | replace: 'GBP', '' | replace: '.00', '' | replace: ',00', '' | strip -}}

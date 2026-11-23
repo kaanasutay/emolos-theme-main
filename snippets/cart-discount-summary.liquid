@@ -1,0 +1,103 @@
+{%- comment -%}
+  Discount rows shown above the cart subtotal.
+  Named rows sum line-level allocations by title, then cart-level applications
+  that are not already listed. Total savings adds the compare-at gap
+  (compare_at_price minus original_price) to cart.total_discount, so the
+  campaign amount is not counted twice.
+{%- endcomment -%}
+
+{%- liquid
+  assign compare_savings = 0
+  assign seen_titles = ''
+
+  for item in cart.items
+    assign unit_compare = item.variant.compare_at_price | default: 0
+    if unit_compare > item.original_price
+      assign unit_save = unit_compare | minus: item.original_price
+      assign line_save = unit_save | times: item.quantity
+      assign compare_savings = compare_savings | plus: line_save
+    endif
+
+    for allocation in item.line_level_discount_allocations
+      if allocation.amount > 0
+        assign discount_title = allocation.discount_application.title | default: 'Discount'
+        assign title_token = '§§' | append: discount_title | append: '§§'
+        unless seen_titles contains title_token
+          assign seen_titles = seen_titles | append: title_token
+        endunless
+      endif
+    endfor
+  endfor
+
+  assign named_count = 0
+  assign title_parts = seen_titles | split: '§§'
+  for discount_title in title_parts
+    if discount_title != blank
+      assign named_count = named_count | plus: 1
+    endif
+  endfor
+
+  for discount in cart.cart_level_discount_applications
+    if discount.total_allocated_amount > 0
+      assign cart_title = discount.title | default: 'Discount'
+      assign cart_token = '§§' | append: cart_title | append: '§§'
+      unless seen_titles contains cart_token
+        assign named_count = named_count | plus: 1
+      endunless
+    endif
+  endfor
+
+  assign total_savings = compare_savings | plus: cart.total_discount
+  assign show_total = false
+  if compare_savings > 0 or named_count != 1
+    assign show_total = true
+  endif
+-%}
+
+{%- if total_savings > 0 -%}
+  <div class="cart-savings">
+    {%- if named_count > 0 -%}
+      <ul class="cart-savings__list list-unstyled" role="list">
+        {%- for discount_title in title_parts -%}
+          {%- if discount_title != blank -%}
+            {%- assign title_total = 0 -%}
+            {%- for item in cart.items -%}
+              {%- for allocation in item.line_level_discount_allocations -%}
+                {%- assign allocation_title = allocation.discount_application.title | default: 'Discount' -%}
+                {%- if allocation_title == discount_title and allocation.amount > 0 -%}
+                  {%- assign title_total = title_total | plus: allocation.amount -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endfor -%}
+            {%- if title_total > 0 -%}
+              <li class="cart-savings__row">
+                <span class="cart-savings__label">{{- discount_title | escape -}}</span>
+                <span class="cart-savings__amount">-{%- render 'formatted-money', amount: title_total -%}</span>
+              </li>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- for discount in cart.cart_level_discount_applications -%}
+          {%- if discount.total_allocated_amount > 0 -%}
+            {%- assign cart_title = discount.title | default: 'Discount' -%}
+            {%- assign cart_token = '§§' | append: cart_title | append: '§§' -%}
+            {%- unless seen_titles contains cart_token -%}
+              <li class="cart-savings__row">
+                <span class="cart-savings__label">{{- cart_title | escape -}}</span>
+                <span class="cart-savings__amount">-{%- render 'formatted-money', amount: discount.total_allocated_amount -%}</span>
+              </li>
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+
+    {%- if show_total -%}
+      <div class="cart-savings__row cart-savings__total">
+        <span class="cart-savings__label">{{- 'cart.total_discount' | t -}}</span>
+        <span class="cart-savings__amount">-{%- render 'formatted-money', amount: total_savings -%}</span>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

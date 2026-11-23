@@ -31,9 +31,11 @@
 
         {% form 'cart', cart, id: 'cart', class: 'cart__contents' %}
           <div class="cart__summary" id="cart-summary">
+            {%- render 'cart-discount-summary' -%}
+
             <h4 class="cart__summary-total h4">
               <span>{{- 'cart.subtotal' | t -}}:</span>
-              <span>{{- cart.total_price | money_without_trailing_zeros -}}</span>
+              <span>{%- render 'formatted-money', amount: cart.total_price -%}</span>
             </h4>
 
             {{ form | payment_terms }}
@@ -49,20 +51,6 @@
                 {{ 'cart.taxes_and_shipping_at_checkout' | t }}
               {%- endif -%}
             </p>
-
-            {%- if cart.cart_level_discount_applications.size > 0 -%}
-              <ul class="cart__summary-discounts list-unstyled" role="list" aria-label="{{- 'customer.order.discount' | t -}}">
-                {%- for discount in cart.cart_level_discount_applications -%}
-                  <li>
-                    {% render 'icon', icon_name: 'option-price_tag' %}
-                    <span>
-                      {{ discount.title }}
-                      (-{{ discount.total_allocated_amount | money_without_trailing_zeros }})
-                    </span>
-                  </li>
-                {%- endfor -%}
-              </ul>
-            {%- endif -%}
 
             <div class="cart__summary-actions">
               {%- if settings.enable_cart_terms -%}
