@@ -51,33 +51,12 @@
     lists.forEach(addSpanish);
   }
 
-  function placeSwitcher() {
-    if (!window.matchMedia('(max-width: 767px)').matches) return;
-
-    var button = document.querySelector('.glc-switcher-btn--embedded, .glc-dropdown-btn.glc-switcher-btn');
-    var list = document.querySelector('.header__utils-items');
-    var cart = list && list.querySelector('.header__utils-item--cart');
-    if (!button || !list || !cart) return;
-
-    var widget = button.parentElement;
-    if (!widget || widget === document.body || widget === document.documentElement || widget === list) return;
-    if (widget.closest('.header__utils-items')) return;
-    if (widget.matches('header, .header, .header__inner, .header__utils, .header__utils-items')) return;
-    if (widget.querySelector('.header__logo, .header__utils-items, .header__nav')) return;
-
-    var slot = document.createElement('li');
-    slot.className = 'header__utils-item header__utils-item--locale';
-    slot.appendChild(widget);
-    list.insertBefore(slot, cart);
-  }
-
   function schedule() {
     if (scheduled) return;
     scheduled = true;
     requestAnimationFrame(function () {
       scheduled = false;
       filterSwitcher();
-      placeSwitcher();
     });
   }
 

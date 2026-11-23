@@ -45,6 +45,51 @@
     }
   }
 
+  @media screen and (max-width: 989px) {
+    #glc-switcher-manual-mobile,
+    .header__utils-items > .glc-switcher-btn {
+      display: inline-flex !important;
+      flex: 0 0 34px !important;
+      width: 34px !important;
+      min-width: 34px !important;
+      max-width: 34px !important;
+      height: 24px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+      overflow: hidden !important;
+    }
+
+    #glc-switcher-manual-desktop {
+      display: none !important;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    #glc-switcher-manual-mobile {
+      display: none !important;
+    }
+
+    #glc-switcher-manual-desktop {
+      position: relative;
+      display: inline-flex !important;
+      flex: 0 0 auto !important;
+      width: max-content !important;
+      height: 32px !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #glc-switcher-manual-desktop .glc-switcher-btn {
+      position: absolute !important;
+      inset: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+    }
+  }
+
 {% endstyle %}
 
 <script>
@@ -359,6 +404,13 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
       {%- endcapture -%}
 
+      {%- liquid
+        assign header_locale_flag = localization.language.iso_code | slice: 0, 2 | downcase
+        if header_locale_flag == 'en'
+          assign header_locale_flag = 'us'
+        endif
+      -%}
+
       {%- capture header_utils -%}
         <nav class="header__utils">
           <ul class="header__utils-items list-unstyled">
@@ -380,6 +432,14 @@ document.addEventListener('DOMContentLoaded', function () {
               </li>
             {%- endif -%}
 
+            <li id="glc-switcher-manual-mobile" class="header__utils-item header__utils-item--locale" aria-hidden="true">
+              <span class="header__locale-chevron">
+                <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.18499 7.86907C2.43163 7.62242 2.83153 7.62242 3.07817 7.86907L6 10.7909L8.92183 7.86907C9.16847 7.62242 9.56837 7.62242 9.81501 7.86907C10.0617 8.11571 10.0617 8.51561 9.81501 8.76225L6.44659 12.1307C6.19995 12.3773 5.80005 12.3773 5.55341 12.1307L2.18499 8.76225C1.93834 8.51561 1.93834 8.11571 2.18499 7.86907Z" fill="currentColor"></path>
+                </svg>
+              </span>
+            </li>
+
             <li class="header__utils-item header__utils-item--cart">
               <a
                 href="{{- routes.cart_url -}}"
@@ -391,6 +451,24 @@ document.addEventListener('DOMContentLoaded', function () {
               >
                 {%- render 'cart-counter' -%}
               </a>
+            </li>
+
+            <li id="glc-switcher-manual-desktop" class="header__utils-item header__utils-item--locale-desktop">
+              <span class="header__locale-desktop-label" aria-hidden="true">
+                <img
+                  class="header__locale-desktop-flag"
+                  src="https://app.gelacy.app/flags/{{ header_locale_flag }}.svg"
+                  alt=""
+                  width="20"
+                  height="16"
+                >
+                <span class="header__locale-desktop-name">{{ localization.language.name }}</span>
+                <span class="header__locale-desktop-pipe"></span>
+                <span class="header__locale-desktop-currency">{{ localization.country.currency.iso_code }} ({{ localization.country.currency.symbol }})</span>
+                <svg class="header__locale-desktop-chevron" width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M2.18499 7.86907C2.43163 7.62242 2.83153 7.62242 3.07817 7.86907L6 10.7909L8.92183 7.86907C9.16847 7.62242 9.56837 7.62242 9.81501 7.86907C10.0617 8.11571 10.0617 8.51561 9.81501 8.76225L6.44659 12.1307C6.19995 12.3773 5.80005 12.3773 5.55341 12.1307L2.18499 8.76225C1.93834 8.51561 1.93834 8.11571 2.18499 7.86907Z" fill="currentColor"></path>
+                </svg>
+              </span>
             </li>
           </ul>
         </nav>
