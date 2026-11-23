@@ -1,0 +1,29 @@
+{%- comment -%}
+  Sort key for a colour name. Lower keys come first.
+  Black is 00. Unknown colours are 99, then alphabetical.
+  Accepts: name {String}
+{%- endcomment -%}
+{%- liquid
+  assign colour_name = name | downcase | replace: '–', ' ' | replace: '—', ' ' | replace: '-', ' ' | replace: '_', ' ' | strip
+  assign colour_pad = colour_name | prepend: ' ' | append: ' '
+  assign colour_rules = 'blue black wash:03:03|washed black:00:01|black ripped:00:02|jet black:00:03|stone beige:07:01|soft sand:07:04|stone blue:04:02|ice blue:05:01|light blue:05:00|sky blue:05:02|dark blue:03:00|raw denim:03:02|mid blue:04:01|dark grey:01:00|dark gray:01:00|charcoal:01:01|anthracite:01:02|washed grey:02:01|washed gray:02:01|light grey:02:02|light gray:02:02|soft grey:02:03|soft gray:02:03|off white:06:02|olive khaki:08:02|olive grey:08:03|olive gray:08:03|dark green:08:04|light green:08:05|black:00:00|navy:03:01|white:06:00|ecru:06:01|cream:06:03|beige:07:00|stone:07:02|sand:07:03|khaki:08:00|olive:08:01|green:08:06|brown:09:00|tan:09:01|taupe:09:02|grey:02:00|gray:02:00|blue:04:00' | split: '|'
+  assign colour_rank = '99'
+  assign colour_index = '99'
+  assign colour_matched = false
+
+  for colour_rule in colour_rules
+    if colour_matched
+      continue
+    endif
+    assign colour_bits = colour_rule | split: ':'
+    assign colour_phrase = colour_bits | first
+    assign colour_needle = colour_phrase | prepend: ' ' | append: ' '
+    if colour_pad contains colour_needle
+      assign colour_rank = colour_bits[1]
+      assign colour_index = colour_bits | last
+      assign colour_matched = true
+    endif
+  endfor
+
+  echo colour_rank | append: '-' | append: colour_index | append: '-' | append: colour_name
+-%}

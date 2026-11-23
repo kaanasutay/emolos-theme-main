@@ -146,6 +146,11 @@ input:disabled + .card-product__swatch {
   letter-spacing: var(--letter-spacing-sm);
 }
 
+.card-product__swatches li:has(.card-product__swatches-remaining),
+.lv-option-collection-swatch-more {
+  order: 999;
+}
+
 .card-product__sizes {
   position: absolute;
   inset-block-end: 1.2rem;

@@ -74,6 +74,7 @@
 {%- endif -%}
 
 {%- unless has_colour_option -%}
+  {%- assign colour_rows = '' -%}
   {%- capture colour_items -%}
     {%- if king_count > 1 -%}
       {%- for king_item in king_products -%}
@@ -86,27 +87,39 @@
         {%- endif -%}
         {%- assign colour_product = all_products[king_item.handle] -%}
         {%- if colour_product.id != blank and colour_product.featured_image -%}
-          <a
-            href="{{ colour_product.url }}"
-            class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
-            title="{{ colour_product.title | escape }}"
-          >
-            <span class="media">
-              {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
-            </span>
-          </a>
+          {%- capture colour_swatch_row -%}
+            <a
+              href="{{ colour_product.url }}"
+              class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
+              title="{{ colour_product.title | escape }}"
+            >
+              <span class="media">
+                {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
+              </span>
+            </a>
+          {%- endcapture -%}
+          {%- capture colour_rank_key -%}
+            {%- render 'colour-swatch-rank', name: colour_product.title -%}
+          {%- endcapture -%}
+          {%- assign colour_rows = colour_rows | append: colour_rank_key | strip | append: '%%KEY%%' | append: colour_swatch_row | append: '%%%ROW%%%' -%}
         {%- else -%}
           {%- assign king_image = king_item.first_image | default: king_item.image -%}
           {%- if king_image != blank -%}
-            <a
-              href="/products/{{ king_item.handle }}"
-              class="product-colour-swatches__item{% if king_item.handle == product.handle %} is-active{% endif %}"
-              title="{{ king_item.value | escape }}"
-            >
-              <span class="media">
-                <img src="{{ king_image }}" alt="{{ king_item.value | escape }}" width="120" height="150" loading="lazy">
-              </span>
-            </a>
+            {%- capture colour_swatch_row -%}
+              <a
+                href="/products/{{ king_item.handle }}"
+                class="product-colour-swatches__item{% if king_item.handle == product.handle %} is-active{% endif %}"
+                title="{{ king_item.value | escape }}"
+              >
+                <span class="media">
+                  <img src="{{ king_image }}" alt="{{ king_item.value | escape }}" width="120" height="150" loading="lazy">
+                </span>
+              </a>
+            {%- endcapture -%}
+            {%- capture colour_rank_key -%}
+              {%- render 'colour-swatch-rank', name: king_item.value -%}
+            {%- endcapture -%}
+            {%- assign colour_rows = colour_rows | append: colour_rank_key | strip | append: '%%KEY%%' | append: colour_swatch_row | append: '%%%ROW%%%' -%}
           {%- endif -%}
         {%- endif -%}
       {%- endfor -%}
@@ -117,23 +130,39 @@
         {%- endcapture -%}
         {%- assign candidate_model_key = candidate_model_key | strip -%}
         {%- if candidate_model_key == product_model_key and colour_product.featured_image -%}
-          <a
-            href="{{ colour_product.url }}"
-            class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
-            title="{{ colour_product.title | escape }}"
-          >
-            <span class="media">
-              {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
-            </span>
-          </a>
+          {%- capture colour_swatch_row -%}
+            <a
+              href="{{ colour_product.url }}"
+              class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
+              title="{{ colour_product.title | escape }}"
+            >
+              <span class="media">
+                {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
+              </span>
+            </a>
+          {%- endcapture -%}
+          {%- capture colour_rank_key -%}
+            {%- render 'colour-swatch-rank', name: colour_product.title -%}
+          {%- endcapture -%}
+          {%- assign colour_rows = colour_rows | append: colour_rank_key | strip | append: '%%KEY%%' | append: colour_swatch_row | append: '%%%ROW%%%' -%}
         {%- endif -%}
       {%- endfor -%}
     {%- endif -%}
   {%- endcapture -%}
 
+  {%- assign colour_items = '' -%}
+  {%- assign colour_sorted_rows = colour_rows | split: '%%%ROW%%%' | sort -%}
+  {%- for colour_sorted_row in colour_sorted_rows -%}
+    {%- if colour_sorted_row == blank -%}
+      {%- continue -%}
+    {%- endif -%}
+    {%- assign colour_piece = colour_sorted_row | split: '%%KEY%%' | last -%}
+    {%- assign colour_items = colour_items | append: colour_piece -%}
+  {%- endfor -%}
   {%- assign colour_item_count = colour_items | split: 'product-colour-swatches__item' | size | minus: 1 -%}
   {%- if colour_collection_handle != blank and colour_match_best > colour_item_count and colour_match_best > 1 -%}
     {%- capture colour_items -%}
+      {%- assign colour_rows = '' -%}
       {%- assign colour_collection = collections[colour_collection_handle] -%}
       {%- for colour_product in colour_collection.products -%}
         {%- capture candidate_model_key -%}
@@ -141,18 +170,33 @@
         {%- endcapture -%}
         {%- assign candidate_model_key = candidate_model_key | strip -%}
         {%- if candidate_model_key == product_model_key and colour_product.featured_image -%}
-          <a
-            href="{{ colour_product.url }}"
-            class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
-            title="{{ colour_product.title | escape }}"
-          >
-            <span class="media">
-              {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
-            </span>
-          </a>
+          {%- capture colour_swatch_row -%}
+            <a
+              href="{{ colour_product.url }}"
+              class="product-colour-swatches__item{% if colour_product.id == product.id %} is-active{% endif %}"
+              title="{{ colour_product.title | escape }}"
+            >
+              <span class="media">
+                {%- render 'image', image: colour_product.featured_image, width: 120, alt: colour_product.title -%}
+              </span>
+            </a>
+          {%- endcapture -%}
+          {%- capture colour_rank_key -%}
+            {%- render 'colour-swatch-rank', name: colour_product.title -%}
+          {%- endcapture -%}
+          {%- assign colour_rows = colour_rows | append: colour_rank_key | strip | append: '%%KEY%%' | append: colour_swatch_row | append: '%%%ROW%%%' -%}
         {%- endif -%}
       {%- endfor -%}
     {%- endcapture -%}
+    {%- assign colour_items = '' -%}
+    {%- assign colour_sorted_rows = colour_rows | split: '%%%ROW%%%' | sort -%}
+    {%- for colour_sorted_row in colour_sorted_rows -%}
+      {%- if colour_sorted_row == blank -%}
+        {%- continue -%}
+      {%- endif -%}
+      {%- assign colour_piece = colour_sorted_row | split: '%%KEY%%' | last -%}
+      {%- assign colour_items = colour_items | append: colour_piece -%}
+    {%- endfor -%}
     {%- assign colour_item_count = colour_items | split: 'product-colour-swatches__item' | size | minus: 1 -%}
   {%- endif -%}
 

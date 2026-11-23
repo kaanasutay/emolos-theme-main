@@ -129,10 +129,6 @@
             assign looped_swatches = looped_swatches | append: option_value
             assign swatches_number = swatches_number | plus: 1
 
-            if swatches_number > swatches_limit
-              continue
-            endif
-
             if variant.featured_media != blank
               assign variant_media_counter = variant_media_counter | plus: 1
             endif
@@ -208,7 +204,10 @@
             </li>
           {%- endcapture -%}
 
-          {%- assign swatch_items_html = swatch_items_html | append: swatch_item_html -%}
+          {%- capture swatch_rank_key -%}
+            {%- render 'colour-swatch-rank', name: option_value -%}
+          {%- endcapture -%}
+          {%- assign swatch_items_html = swatch_items_html | append: swatch_rank_key | strip | append: '%%KEY%%' | append: swatch_item_html | append: '%%%ROW%%%' -%}
         {%- endif -%}
 
       {%- endfor -%}
@@ -392,6 +391,22 @@
         {%- endif -%}
       {%- endcapture -%}
 
+      {%- liquid
+        assign swatch_sorted_rows = swatch_items_html | split: '%%%ROW%%%' | sort
+        assign swatch_items_html = ''
+        assign swatch_shown = 0
+        for swatch_sorted_row in swatch_sorted_rows
+          if swatch_sorted_row == blank
+            continue
+          endif
+          assign swatch_shown = swatch_shown | plus: 1
+          if swatch_shown > swatches_limit
+            break
+          endif
+          assign swatch_piece = swatch_sorted_row | split: '%%KEY%%' | last
+          assign swatch_items_html = swatch_items_html | append: swatch_piece
+        endfor
+      -%}
       {%- capture product_swatches_html -%}
         <div class="product-options__value-list card-product__swatches {{ settings.product_swatches_show_always }} js-swatches">
           <ul>{{ swatch_items_html | append: swatch_number_item_html }}</ul>
