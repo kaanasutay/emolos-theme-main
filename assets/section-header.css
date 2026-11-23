@@ -62,6 +62,16 @@
     padding-bottom: 0;
   }
 
+  .header {
+    border-bottom: 0 !important;
+  }
+
+  .header .header__inner::after,
+  .header .header__inner:after {
+    display: none !important;
+    content: none !important;
+  }
+
   .header__inner {
     align-items: center;
   }
