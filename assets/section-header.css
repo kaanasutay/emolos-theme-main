@@ -931,11 +931,14 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
     width: calc(100% - clamp(52px, 16.7vw, 72px)) !important;
     max-width: none !important;
     height: 100% !important;
-    padding: 0 18px 24px !important;
+    padding: 0 18px 28px !important;
     margin-block-start: 0 !important;
     background-color: #fff;
     font-family: Oswald, sans-serif;
-    overflow-y: auto;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box;
+    overflow: visible !important;
     z-index: 10000;
     transform: translateX(100%);
   }
@@ -975,21 +978,26 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
   .header__drawer .mobile-menu__bar {
     display: flex;
     align-items: center;
-    gap: 16px;
+    flex-wrap: nowrap;
+    gap: 18px;
     position: relative;
     height: auto;
     min-height: 0;
-    padding: 22px 0 18px;
+    padding: 28px 0 22px;
     background: #fff;
     z-index: 3;
+    flex: 0 0 auto;
   }
 
   .header__drawer .mobile-menu__footer {
     position: relative;
-    z-index: 4;
-    margin-top: 12px;
-    padding: 16px 0 4px;
+    z-index: 5;
+    flex: 0 0 auto;
+    margin-top: 0;
+    padding: 18px 0 8px;
     border-top: 1px solid #000;
+    background: #fff;
+    overflow: visible;
   }
 
   .header__drawer .mobile-menu__localization,
@@ -997,16 +1005,20 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 6px;
+    gap: 14px;
     position: static;
     top: auto;
     right: auto;
+    bottom: auto;
     left: auto;
     min-width: 0;
+    width: 100%;
+    overflow: visible;
   }
 
   .header__drawer .mobile-menu__loc {
     position: relative;
+    overflow: visible;
   }
 
   .header__drawer .mobile-menu__loc-button,
@@ -1028,7 +1040,7 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
     cursor: pointer;
     background: none;
     border: 0;
-    padding: 2px 18px 2px 0;
+    padding: 6px 20px 6px 0;
     margin: 0;
   }
 
@@ -1054,14 +1066,20 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
   .header__drawer .mobile-menu__loc-list {
     position: absolute;
     inset-inline-start: 0;
+    inset-inline-end: auto;
+    top: auto;
+    bottom: calc(100% + 8px);
     inset-block-start: auto;
-    inset-block-end: calc(100% + 6px);
+    inset-block-end: calc(100% + 8px);
+    width: max-content;
     min-width: 230px;
-    max-height: min(280px, 50vh);
+    max-width: calc(100vw - 88px);
+    max-height: min(260px, 46vh);
+    overflow-x: hidden;
     overflow-y: auto;
     background: #fff;
     border: 1px solid #000;
-    z-index: 6;
+    z-index: 30;
     padding: 6px 0;
   }
 
@@ -1078,6 +1096,7 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
     font-weight: 500;
     text-transform: uppercase;
     color: #000;
+    white-space: nowrap;
   }
 
   .header__drawer .mobile-menu__loc-option.is-active {
@@ -1184,8 +1203,12 @@ html.js .header__drawer > .drawer__container[open] > .drawer__content {
 
   .header__drawer .mobile-menu__nav-row {
     margin: 0;
-    padding: 0;
+    padding: 4px 0 12px;
     border: 0;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .header__drawer .drawer__nav-link,
