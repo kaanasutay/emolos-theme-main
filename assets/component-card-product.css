@@ -391,17 +391,25 @@ input:disabled + .card-product__swatch {
   }
 }
 
+.card-product .card-product__sizes:has(.quick-cart-modal__trigger) {
+  inset-inline-start: auto;
+  width: auto;
+  margin-block-start: 0;
+}
+
 @media screen and (min-width: 750px) and (hover: hover) {
   .card-product__swatches {
     display: block;
   }
 
   .card-product .card-product__sizes-content {
-    display: block;
+    display: none;
   }
 
   .card-product__sizes-btn-toggle {
-    display: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .card-product__sizes {

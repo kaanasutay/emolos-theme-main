@@ -30,29 +30,6 @@ if (!customElements.get('card-product')) {
           ...this.duplicateSizeBtns
         ];
 
-        if (this.swatches) {
-          this.swatches.addEventListener('click', e => {
-            const variantId = e.target.getAttribute('data-variant');
-
-            if (variantId) {
-              const closestProductCardMedia = e.target.closest('.relative')?.querySelector('.card-product__media');
-              const closestProductCardContent = e.target.closest('card-product').querySelector('.card-product__content');
-
-              if (closestProductCardMedia) {
-                const currentUrlMedia = closestProductCardMedia.href.split('?')[0];
-                const newUrlMedia = currentUrlMedia + '?variant=' + variantId;
-                closestProductCardMedia.href = newUrlMedia;
-              }
-
-              if (closestProductCardContent) {
-                const currentUrlContent = closestProductCardContent.href.split('?')[0];
-                const newUrlContent = currentUrlContent + '?variant=' + variantId;
-                closestProductCardContent.href = newUrlContent;
-              }
-            }
-          });
-        }
-
         this.btnToggleSizes.addEventListener('click', e => {
           e.preventDefault();
 
@@ -143,6 +120,27 @@ if (!customElements.get('card-product')) {
       if (this.swatches) {
         this.btnSwatches =
           this.swatches.querySelectorAll('.js-btn-swatch');
+
+        this.swatches.addEventListener('click', e => {
+          const variantId = e.target.getAttribute('data-variant');
+
+          if (!variantId) {
+            return;
+          }
+
+          const closestProductCardMedia = e.target.closest('.relative')?.querySelector('.card-product__media');
+          const closestProductCardContent = this.querySelector('.card-product__content');
+
+          if (closestProductCardMedia) {
+            const currentUrlMedia = closestProductCardMedia.href.split('?')[0];
+            closestProductCardMedia.href = currentUrlMedia + '?variant=' + variantId;
+          }
+
+          if (closestProductCardContent) {
+            const currentUrlContent = closestProductCardContent.href.split('?')[0];
+            closestProductCardContent.href = currentUrlContent + '?variant=' + variantId;
+          }
+        });
 
         this.swatches.addEventListener('change', e => {
           this.querySelector('a.card-product__media').classList.add('is-transitioning');

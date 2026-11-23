@@ -468,7 +468,15 @@
   {%- endif -%}
 {%- endunless -%}
 
-{%- if plp_card or quick_modal_card -%}
+{%- liquid
+  assign use_quick_modal_button = false
+  if plp_card or quick_modal_card
+    assign use_quick_modal_button = true
+  elsif hide_actions == false and settings.quick_add_to_cart != 'no_button' and settings.quick_add_to_cart != 'bulk'
+    assign use_quick_modal_button = true
+  endif
+-%}
+{%- if use_quick_modal_button -%}
   {%- capture quick_add_to_cart_button_html -%}
     <div class="card-product__sizes svg-color-inherit no-js-hidden">
       <button
