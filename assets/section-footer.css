@@ -352,6 +352,19 @@ html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg,
   height: auto;
 }
 
+.footer__payment,
+.footer__payment .list-payment__item,
+.footer__payment .icon,
+.footer__payment svg,
+.footer__payment svg * {
+  color: initial !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+.footer__payment .icon {
+  fill: unset;
+}
+
 @media screen and (min-width: 750px) {
   .footer__col--payment {
     grid-column: 1 / -1;

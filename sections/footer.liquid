@@ -232,7 +232,7 @@
                           {%- continue -%}
                         {%- endif -%}
                         <li class="list-payment__item">
-                          {{ payment_type | payment_type_svg_tag: class: 'icon icon--full-color' | replace: 'id="', 'id="footer-' | replace: 'aria-labelledby="', 'aria-labelledby="footer-' }}
+                          {{ payment_type | payment_type_svg_tag: class: 'icon icon--full-color' | replace: 'id="', 'id="footer-' | replace: 'aria-labelledby="', 'aria-labelledby="footer-' | replace: 'url(#', 'url(#footer-' | replace: 'href="#', 'href="#footer-' | replace: 'fill:color(display-p3', 'data-p3:color(display-p3' }}
                         </li>
                       {%- endfor -%}
                     </ul>
