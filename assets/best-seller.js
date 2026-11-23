@@ -215,7 +215,7 @@ if (!customElements.get('best-seller-slider')) {
         }
   
         const addButton = event.target.closest('.best-seller__add');
-        if (addButton) {
+        if (addButton && !addButton.classList.contains('quick-cart-modal__trigger')) {
           event.preventDefault();
           this.addToCart(addButton);
         }

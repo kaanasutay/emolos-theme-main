@@ -4,7 +4,6 @@
 {%- liquid
   assign collection = section.settings.collection
   assign product_limit = section.settings.product_limit | default: 8
-  assign size_option_name = settings.sizes_option | default: 'Size'
   assign products = collection.products
 -%}
 
@@ -36,7 +35,6 @@
         <div class="best-seller__track">
           {%- for product in products limit: product_limit -%}
             {%- liquid
-              assign size_option = product.options_by_name[size_option_name]
               assign featured_image = product.featured_image
               assign hover_image = product.images[1]
               assign variant = product.selected_or_first_available_variant
@@ -73,41 +71,16 @@
                   {%- endif -%}
                 </a>
 
-                <div class="best-seller__quick" data-default-variant="{{ variant.id }}">
-                  {%- if size_option != blank -%}
-                    <div class="best-seller__sizes">
-                      {%- for size_value in size_option.values -%}
-                        {%- liquid
-                          assign size_variant = nil
-                          assign size_available = false
-                          for product_variant in product.variants
-                            if product_variant.options contains size_value
-                              assign size_variant = product_variant
-                              if product_variant.available
-                                assign size_available = true
-                                break
-                              endif
-                            endif
-                          endfor
-                        -%}
-                        <button
-                          type="button"
-                          class="best-seller__size{% unless size_available %} best-seller__size--unavailable{% endunless %}"
-                          data-variant-id="{{ size_variant.id }}"
-                          {% unless size_available %}disabled{% endunless %}
-                        >
-                          {{ size_value }}
-                        </button>
-                      {%- endfor -%}
-                    </div>
-                  {%- endif -%}
+                <div class="best-seller__quick">
                   <button
                     type="button"
-                    class="best-seller__add"
-                    data-variant-id="{{ variant.id }}"
-                    {% unless variant.available %}disabled{% endunless %}
+                    class="best-seller__add quick-cart-modal__trigger"
+                    data-product-url="{{ product.url }}"
+                    aria-label="{{ 'products.card-product.add_to_cart' | t }}"
+                    aria-controls="quick-cart-modal"
+                    aria-expanded="false"
                   >
-                    ADD TO BAG
+                    {% render 'icon', icon_name: 'theme-plus-button' %}
                   </button>
                 </div>
                 </div>
