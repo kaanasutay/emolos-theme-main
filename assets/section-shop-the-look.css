@@ -121,11 +121,9 @@ html.no-js .section-shop-the-look__swiper .swiper-slide + .swiper-slide {
   }
 
   .section-shop-the-look .card-product__content {
+    align-items: flex-start;
     padding-block-start: 1.5rem;
-  }
-
-  .section-shop-the-look .card-product__title {
-    margin-block-end: 0.8rem;
+    text-align: left;
   }
 
   .section-shop-the-look__title {

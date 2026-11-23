@@ -58,11 +58,21 @@
 }
 
 .predictive-search__card-product .card-product__content {
+  align-items: flex-start;
+  text-align: left;
   padding-block-start: 0.8rem;
 }
 
 .predictive-search__card-product .card-product__title {
-  font-size: calc(var(--font-heading-scale) * 1.2rem);
+  margin: 0.5rem 0 0;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-heading-family);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.8rem;
+  letter-spacing: 0;
+  text-align: left;
+  text-transform: uppercase;
 }
 
 .predictive-search__link {

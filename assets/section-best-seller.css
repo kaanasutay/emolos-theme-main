@@ -95,30 +95,34 @@
   }
   
   .best-seller__info {
-    margin-top: 2rem;
-    padding-left: 0.5rem;
+    margin-top: 1.5rem;
+    padding-left: 1rem;
     text-align: left;
   }
   
   .best-seller__title {
     display: block;
-    margin: 0 0 4px;
+    margin: 0.5rem 0 0;
     font-family: var(--font-heading-family);
-    font-size: 11px;
-    font-weight: 500;
-    line-height: 17px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.8rem;
     letter-spacing: 0;
     text-transform: uppercase;
-    color: #000000;
+    color: rgb(var(--color-foreground));
+    text-align: left;
     text-decoration: none;
   }
   
   .best-seller__price {
+    margin: 0.5rem 0 0;
     font-family: var(--font-body-family);
-    font-size: 11px;
+    font-size: 1.3rem;
     font-weight: 400;
-    line-height: 19.8px;
-    text-transform: uppercase;
+    line-height: 1.9rem;
+    letter-spacing: 0;
+    text-align: left;
+    text-transform: none;
   }
   
   .best-seller__price span,
@@ -126,24 +130,31 @@
   .best-seller__price .glc-money {
     display: inline-block;
     font-family: var(--font-body-family);
-    font-size: 11px !important;
-    font-weight: 400 !important;
-    line-height: 19.8px !important;
-    height: 19.8px;
+    font-size: 1.3rem !important;
+    font-weight: 600 !important;
+    line-height: 1.9rem !important;
+    height: auto;
     letter-spacing: 0;
-    text-transform: uppercase;
+    text-transform: none;
     vertical-align: baseline;
   }
   
   .best-seller__price-sale {
-    color: #f94c43;
+    color: rgb(var(--color-foreground));
   }
   
   .best-seller__price-compare {
     position: relative;
     display: inline-block;
-    margin-left: 1rem;
-    color: #000000;
+    margin-left: 0.7rem;
+    color: #d72c0c;
+  }
+
+  .best-seller__price-compare span,
+  .best-seller__price-compare .glc-money {
+    margin-left: 0;
+    color: #d72c0c;
+    font-weight: 400 !important;
   }
   
   .best-seller__price-compare::before {
@@ -320,6 +331,14 @@
     .best-seller__add:disabled {
       opacity: 0.35;
       cursor: default;
+    }
+
+    .best-seller__price,
+    .best-seller__price span,
+    .best-seller__price .money,
+    .best-seller__price .glc-money {
+      font-size: 1.4rem !important;
+      line-height: 2rem !important;
     }
   }
   
