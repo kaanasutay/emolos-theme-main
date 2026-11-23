@@ -355,14 +355,29 @@ html.js .footer__links-details.is-active .footer__links-mobile-link-icon svg,
 .footer__payment,
 .footer__payment .list-payment__item,
 .footer__payment .icon,
-.footer__payment svg,
-.footer__payment svg * {
+.footer__payment svg {
   color: initial !important;
   -webkit-text-fill-color: initial !important;
 }
 
 .footer__payment .icon {
-  fill: unset;
+  fill: none;
+}
+
+.footer__payment [aria-labelledby="footer-pi-american_express"] path[fill="#0071CE"] {
+  fill: #0071CE !important;
+}
+
+.footer__payment [aria-labelledby="footer-pi-american_express"] path[fill="white"] {
+  fill: #fff !important;
+}
+
+.footer__payment [aria-labelledby="footer-pi-klarna"] rect[fill="#FFA8CD"] {
+  fill: #FFA8CD !important;
+}
+
+.footer__payment [aria-labelledby="footer-pi-klarna"] path[fill="#0B051D"] {
+  fill: #0B051D !important;
 }
 
 @media screen and (min-width: 750px) {
