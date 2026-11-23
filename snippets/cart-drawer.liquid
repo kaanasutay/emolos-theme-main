@@ -109,16 +109,6 @@
               <div id="cart-summary">
                 {%- render 'cart-discount-summary' -%}
 
-                <div class="cart-drawer__summary-total">
-                  <span>
-                    {{- 'cart.subtotal' | t -}}:
-                  </span>
-
-                  <span>
-                    {%- render 'formatted-money', amount: cart.total_price -%}
-                  </span>
-                </div>
-
                 <p class="cart-drawer__summary-tax">
                   {{- 'cart.shipping_and_discounts_at_checkout' | t -}}
                 </p>

@@ -33,11 +33,6 @@
           <div class="cart__summary" id="cart-summary">
             {%- render 'cart-discount-summary' -%}
 
-            <h4 class="cart__summary-total h4">
-              <span>{{- 'cart.subtotal' | t -}}:</span>
-              <span>{%- render 'formatted-money', amount: cart.total_price -%}</span>
-            </h4>
-
             {{ form | payment_terms }}
 
             <p class="cart__summary-tax">

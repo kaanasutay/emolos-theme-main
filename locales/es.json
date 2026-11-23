@@ -477,7 +477,12 @@
     "continue_shopping": "Continuar comprando",
     "remove": "Eliminar",
     "subtotal": "Subtotal",
+    "subtotal_items": {
+      "one": "Subtotal ({{ count }} artículo)",
+      "other": "Subtotal ({{ count }} artículos)"
+    },
     "total_discount": "Descuento total",
+    "you_save": "Ahorras {{ amount }} ({{ percent }}%) respecto al precio completo",
     "you_may_like": "You may like",
     "shipping_and_discounts_at_checkout": "Shipping and discounts calculated at checkout.",
     "taxes_and_shipping_at_checkout": "Impuestos y envío calculado al finalizar la compra",

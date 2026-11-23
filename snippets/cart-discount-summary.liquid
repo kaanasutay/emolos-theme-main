@@ -1,9 +1,8 @@
 {%- comment -%}
-  Discount rows shown above the cart subtotal.
-  Named rows sum line-level allocations by title, then cart-level applications
-  that are not already listed. Total savings adds the compare-at gap
-  (compare_at_price minus original_price) to cart.total_discount, so the
-  campaign amount is not counted twice.
+  Campaign rows, subtotal, and the green savings line.
+  Savings math is unchanged: compare-at gap (compare_at_price minus
+  original_price) plus cart.total_discount, so a campaign is not counted twice.
+  The percentage is total_savings against that full price.
 {%- endcomment -%}
 
 {%- liquid
@@ -48,56 +47,66 @@
   endfor
 
   assign total_savings = compare_savings | plus: cart.total_discount
-  assign show_total = false
-  if compare_savings > 0 or named_count != 1
-    assign show_total = true
+  assign full_price_total = cart.total_price | plus: total_savings
+  assign savings_percent = 0
+  if full_price_total > 0 and total_savings > 0
+    assign savings_percent = total_savings | times: 100.0 | divided_by: full_price_total | round
   endif
 -%}
 
-{%- if total_savings > 0 -%}
-  <div class="cart-savings">
-    {%- if named_count > 0 -%}
-      <ul class="cart-savings__list list-unstyled" role="list">
-        {%- for discount_title in title_parts -%}
-          {%- if discount_title != blank -%}
-            {%- assign title_total = 0 -%}
-            {%- for item in cart.items -%}
-              {%- for allocation in item.line_level_discount_allocations -%}
-                {%- assign allocation_title = allocation.discount_application.title | default: 'Discount' -%}
-                {%- if allocation_title == discount_title and allocation.amount > 0 -%}
-                  {%- assign title_total = title_total | plus: allocation.amount -%}
-                {%- endif -%}
-              {%- endfor -%}
+<div class="cart-pay">
+  {%- if named_count > 0 -%}
+    <ul class="cart-pay__campaigns list-unstyled" role="list">
+      {%- for discount_title in title_parts -%}
+        {%- if discount_title != blank -%}
+          {%- assign title_total = 0 -%}
+          {%- for item in cart.items -%}
+            {%- for allocation in item.line_level_discount_allocations -%}
+              {%- assign allocation_title = allocation.discount_application.title | default: 'Discount' -%}
+              {%- if allocation_title == discount_title and allocation.amount > 0 -%}
+                {%- assign title_total = title_total | plus: allocation.amount -%}
+              {%- endif -%}
             {%- endfor -%}
-            {%- if title_total > 0 -%}
-              <li class="cart-savings__row">
-                <span class="cart-savings__label">{{- discount_title | escape -}}</span>
-                <span class="cart-savings__amount">-{%- render 'formatted-money', amount: title_total -%}</span>
-              </li>
-            {%- endif -%}
+          {%- endfor -%}
+          {%- if title_total > 0 -%}
+            <li class="cart-pay__campaign">
+              <span class="cart-pay__campaign-name">
+                {%- render 'icon', icon_name: 'option-price_tag' -%}
+                <span>{{- discount_title | escape -}}</span>
+              </span>
+              <span class="cart-pay__campaign-amount">-{%- render 'formatted-money', amount: title_total -%}</span>
+            </li>
           {%- endif -%}
-        {%- endfor -%}
+        {%- endif -%}
+      {%- endfor -%}
 
-        {%- for discount in cart.cart_level_discount_applications -%}
-          {%- if discount.total_allocated_amount > 0 -%}
-            {%- assign cart_title = discount.title | default: 'Discount' -%}
-            {%- assign cart_token = '§§' | append: cart_title | append: '§§' -%}
-            {%- unless seen_titles contains cart_token -%}
-              <li class="cart-savings__row">
-                <span class="cart-savings__label">{{- cart_title | escape -}}</span>
-                <span class="cart-savings__amount">-{%- render 'formatted-money', amount: discount.total_allocated_amount -%}</span>
-              </li>
-            {%- endunless -%}
-          {%- endif -%}
-        {%- endfor -%}
-      </ul>
-    {%- endif -%}
+      {%- for discount in cart.cart_level_discount_applications -%}
+        {%- if discount.total_allocated_amount > 0 -%}
+          {%- assign cart_title = discount.title | default: 'Discount' -%}
+          {%- assign cart_token = '§§' | append: cart_title | append: '§§' -%}
+          {%- unless seen_titles contains cart_token -%}
+            <li class="cart-pay__campaign">
+              <span class="cart-pay__campaign-name">
+                {%- render 'icon', icon_name: 'option-price_tag' -%}
+                <span>{{- cart_title | escape -}}</span>
+              </span>
+              <span class="cart-pay__campaign-amount">-{%- render 'formatted-money', amount: discount.total_allocated_amount -%}</span>
+            </li>
+          {%- endunless -%}
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
 
-    {%- if show_total -%}
-      <div class="cart-savings__row cart-savings__total">
-        <span class="cart-savings__label">{{- 'cart.total_discount' | t -}}</span>
-        <span class="cart-savings__amount">-{%- render 'formatted-money', amount: total_savings -%}</span>
-      </div>
-    {%- endif -%}
+  <div class="cart-pay__total">
+    <span>{{- 'cart.subtotal_items' | t: count: cart.item_count -}}</span>
+    <span>{%- render 'formatted-money', amount: cart.total_price -%}</span>
   </div>
-{%- endif -%}
+
+  {%- if total_savings > 0 and full_price_total > 0 -%}
+    {%- capture savings_money -%}{%- render 'formatted-money', amount: total_savings -%}{%- endcapture -%}
+    <p class="cart-pay__save">
+      {{- 'cart.you_save' | t: amount: savings_money, percent: savings_percent -}}
+    </p>
+  {%- endif -%}
+</div>

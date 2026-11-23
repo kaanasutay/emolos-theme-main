@@ -98,54 +98,100 @@
   margin: 0;
 }
 
+.cart-item__discounts li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  max-width: 100%;
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  color: #157A3E;
+  background: #F3F8F5;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
 .cart-item__discounts svg,
 .cart-item__discounts span {
   vertical-align: middle;
   display: inline;
 }
 
+.cart-item__discounts svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  flex-shrink: 0;
+  fill: currentColor;
+  color: #157A3E;
+}
+
 .cart-item__discount-amount {
   white-space: nowrap;
 }
 
-.cart-savings {
+.cart-pay__campaigns {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  margin: 0 0 1rem;
+  gap: 0.6rem;
+  margin: 0 0 0.8rem;
+  padding: 0 0 0.8rem;
+  border-bottom: 1px solid #E5E5E5;
 }
 
-.cart-savings__list {
-  margin: 0;
-}
-
-.cart-savings__row {
+.cart-pay__campaign {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 1.2rem;
   margin: 0;
-  color: #111;
-  font-size: 1.2rem;
-  line-height: 1.35;
+  color: #16794C;
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.3;
 }
 
-.cart-savings__label {
+.cart-pay__campaign-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   min-width: 0;
 }
 
-.cart-savings__amount {
+.cart-pay__campaign-name svg {
+  width: 1.4rem;
+  height: 1.4rem;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+.cart-pay__campaign-amount {
   flex-shrink: 0;
   white-space: nowrap;
 }
 
-.cart-savings__total {
-  font-weight: 600;
+.cart-pay__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin: 0;
+  color: #111;
+  font-family: var(--font-heading-family);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  text-transform: uppercase;
 }
 
-.cart-drawer .cart-savings {
-  padding-bottom: 0.8rem;
-  border-bottom: 0.1rem solid #ececec;
+.cart-pay__save {
+  margin: 0.4rem 0 0;
+  color: #157A3E;
+  font-family: var(--font-body-family);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.35;
 }
 
 cart-remove-button {
